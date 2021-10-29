@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv, find_dotenv
-
-load_dotenv(find_dotenv())
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -84,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'task_manager',
         'USER': 'admin',
-        'PASSWORD': str(os.getenv('DATABASE_PASS')),
+        'PASSWORD': '676767',
         'HOST': 'localhost',
         'PORT': '5432',
     }
