@@ -20,5 +20,9 @@ sort:
 	poetry run isort .
 run:
 	poetry run python3 manage.py runserver
+run_gunicorn:
+	poetry run gunicorn task_manager.wsgi
 make_migrations:
 	poetry run python3 manage.py makemigrations
+export_req:
+	poetry export -f requirements.txt --output requirements.txt

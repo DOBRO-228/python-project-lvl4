@@ -35,7 +35,9 @@ if os.environ.get('ENVIRONMENT') == 'PROD':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'task-manager-228.herokuapp.com']
+print(os.environ.get('ENVIRONMENT'))
+
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'task-manager-228.herokuapp.com']
 
 
 # Application definition
