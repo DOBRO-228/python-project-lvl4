@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
+from dotenv import load_dotenv
+
 import os
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rwggl@^gxj15z8dnr^&q5!w8jojluw#5*2#as^4=$&ph8tl9yh'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('ENVIRONMENT') == 'PROD':
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'task-manager-228.herokuapp.com']
 
@@ -86,6 +93,9 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+if os.environ.get('ENVIRONMENT') == 'PROD':
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation
