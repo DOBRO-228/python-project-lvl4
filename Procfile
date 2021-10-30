@@ -1,1 +1,1 @@
-web: poetry run gunicorn task_manager.wsgi
+web: gunicorn task_manager.wsgi
