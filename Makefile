@@ -18,10 +18,14 @@ test-coverage_mine:
 	poetry run pytest --cov=page_loader
 sort:
 	poetry run isort .
-run:
+start:
 	poetry run python3 manage.py runserver
-run_gunicorn:
+start_gunicorn:
 	poetry run gunicorn task_manager.wsgi
+start_app:
+	poetry run python3 manage.py startapp authentication
+shell:
+	poetry run python3 manage.py shell
 make_migrations:
 	poetry run python3 manage.py makemigrations
 export_req:
