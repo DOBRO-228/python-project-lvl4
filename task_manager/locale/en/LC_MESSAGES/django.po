@@ -18,18 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: task_manager/templates/index.html:11
-msgid "Менджер задач"
+#: templates/base.html:48
+msgid "Менеджер задач"
 msgstr "Task manager"
 
-#: task_manager/templates/index.html:13
+#: templates/base.html:50
 msgid "Вход"
 msgstr "Log In"
 
-#: task_manager/templates/index.html:14
+#: templates/base.html:51
 msgid "Регистрация"
 msgstr "Sign Up"
 
-#: task_manager/templates/index.html:15
+#: templates/base.html:52
 msgid "Пользователи"
 msgstr "Users"
+
+#: templates/task_manager/home.html:7
+msgid "Пет проект"
+msgstr "Pet project"
+
+#: templates/task_manager/home.html:8
+msgid "Все мои пет проекты ты можешь посмотреть на гитхубе"
+msgstr "You can see all my pet project on github"
+
+#: templates/task_manager/home.html:10
+msgid "ГитХуб"
+msgstr "Github"
