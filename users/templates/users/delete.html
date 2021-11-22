@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block title %} Delete user {% endblock %}
+
+{% block content %}
+
+{% bootstrap_messages %}
+
+<h1>{% translate 'Удаление пользователя'%}</h1>
+<form method="post">
+    {% csrf_token %}
+    <p>{% translate 'Вы уверены, что хотите удалить'%} {{ user.first_name }} {{ user.last_name }}?</p>
+    {% translate 'Да, удалить' as buttons_text %}
+    {% bootstrap_button buttons_text button_type="submit" button_class="btn btn-danger" %}
+</form>
+
+{% endblock %}
