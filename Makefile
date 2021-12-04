@@ -1,19 +1,10 @@
-install:
-	poetry install
-build:
-	poetry build
-publish:
-	poetry publish --dry-run
-package-install:
-	pip install --user ~/Desktop/hexlet_projects/python-project-lvl4/dist/*.whl
-package-reinstall:
-	pip install --user ~/Desktop/hexlet_projects/python-project-lvl4/dist/*.whl --force-reinstall
 lint:
-	poetry run flake8 page_loader
+	poetry run flake8 task_manager users
 test:
-	poetry run pytest -vv
-test-coverage:
-	poetry run pytest --cov=page_loader --cov-report xml
+	poetry run python3 manage.py test
+coverage:
+	poetry run coverage run --source='users' manage.py test users
+	poetry run coverage report
 test-coverage_mine:
 	poetry run pytest --cov=page_loader
 sort:
