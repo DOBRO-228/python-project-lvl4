@@ -1,80 +1,93 @@
-# from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-# from django.urls import reverse
-from django.views import generic
-# from django.utils import timezone
-from .forms import RegisterForm
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-import logging
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 
-
-logger = logging.getLogger(__name__)
+from .forms import UserForm
 
 
 class ListView(generic.ListView):
     template_name = 'users/list.html'
     context_object_name = 'users'
-
-    def get_queryset(self):
-        """
-        Return the list of users.
-        """
-        return User.objects.all()
+    model = User
 
 
-def register_user(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Пользователь успешно зарегистрирован')
+class UserLoginView(SuccessMessageMixin, LoginView):
+    success_message = 'Вы залогинены'
+
+
+class CheckAuthenticationMixin(object):
+    def check_authentication(self, request, pk):
+        if not request.user.is_authenticated:
+            messages.error(request, 'Вы не авторизованы! Пожалуйста, выполните вход.')
             return redirect('login')
-    else:
-        form = RegisterForm()
-    context = {'form': form, 'buttons_text': 'Зарегистрировать', 'title': 'Регистрация'}
-    return render(request, 'users/register.html', context)
+        elif request.user.id != pk:
+            messages.error(request, 'У вас нет прав для изменения другого пользователя.')
+            return redirect('users:list')
+        return True
 
 
-def update_user(request, pk):
-    if request.user.id is None:
-        messages.error(request, 'Вы не авторизованы! Пожалуйста, выполните вход.')
-        return redirect('login')
-    elif request.user.id != pk:
-        messages.error(request, 'У вас нет прав для изменения другого пользователя.')
-        return redirect('users:list')
-    else:
-        if request.method == 'POST':
-            form = RegisterForm(request.POST)
-            if form.is_valid():
-                user = User.objects.get(pk=pk)
-                user.username = form.cleaned_data['username']
-                user.first_name = form.cleaned_data['first_name']
-                user.last_name = form.cleaned_data['last_name']
-                user.set_password(form.cleaned_data['password2'])
-                user.save()
-                logout(request)
-                messages.info(request, 'Пользователь успешно изменён')
-                return redirect('users:list')
-        else:
-            form = RegisterForm()
-    context = {'form': form, 'buttons_text': 'Изменить', 'title': 'Изменение пользователя'}
-    return render(request, 'users/register.html', context)
+class UserLogoutView(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        messages.add_message(request, messages.INFO, 'Вы разлогинены')
+        return response
 
 
-def delete_user(request, pk):
-    if request.user.id is None:
-        messages.error(request, 'Вы не авторизованы! Пожалуйста, выполните вход.')
-        return redirect('login')
-    elif request.user.id != pk:
-        messages.error(request, 'У вас нет прав для изменения другого пользователя.')
-        return redirect('users:list')
-    else:
-        if request.method == 'POST':
-            user = User.objects.get(pk=pk)
+class RegistrationView(SuccessMessageMixin, CreateView):
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('login')
+    form_class = UserForm
+    success_message = 'Пользователь успешно зарегистрирован'
+
+
+class UserUpdateView(CheckAuthenticationMixin, UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = 'users/update.html'
+    success_url = reverse_lazy('users:list')
+    success_message = 'Пользователь успешно изменён'
+
+    def get(self, request, *args, **kwargs):
+        response = CheckAuthenticationMixin.check_authentication(self, request, kwargs['pk'])
+        if response is True:
+            return render(request, self.template_name, {'form': self.form_class(instance=request.user)})
+        return response
+
+    def form_valid(self, form):
+        request = self.request
+        response = CheckAuthenticationMixin.check_authentication(self, request, self.kwargs['pk'])
+        if response is True:
+            form.save()
+            logout(request)
+            messages.info(request, 'Пользователь успешно изменён')
+            return redirect('users:list')
+        return response
+
+
+class DeleteUserView(CheckAuthenticationMixin, DeleteView):
+    model = User
+    template_name = 'users/delete.html'
+    success_url = reverse_lazy('users:list')
+
+    def get(self, request, *args, **kwargs):
+        response = CheckAuthenticationMixin.check_authentication(self, request, kwargs['pk'])
+        if response is True:
+            return render(request, self.template_name)
+        return response
+
+    def post(self, request, *args, **kwargs):
+        response = CheckAuthenticationMixin.check_authentication(self, request, kwargs['pk'])
+        if response is True:
+            user = User.objects.get(pk=kwargs['pk'])
             user.delete()
             logout(request)
             messages.success(request, 'Пользователь успешно удалён')
             return redirect('users:list')
-        return render(request, 'users/delete.html')
+        return response
