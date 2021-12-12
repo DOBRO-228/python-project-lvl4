@@ -1,0 +1,12 @@
+{% extends 'users/user.html' %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block title %}
+{% translate 'Изменение пользователя' %}
+{% endblock %}
+
+{% block button %}
+{% translate 'Изменить' as buttons_text %}
+{% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
+{% endblock %}
