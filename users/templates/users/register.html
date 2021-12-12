@@ -1,16 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'users/user.html' %}
 {% load bootstrap4 %}
 {% load i18n %}
 
-{% block title %} Create user {% endblock %}
+{% block title %}
+{% translate 'Регистрация' %}
+{% endblock %}
 
-{% block content %}
-{% bootstrap_messages %}
-<h1>{{ title }}</h1>
-<form method="post">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    {% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
-</form>
-
+{% block button %}
+{% translate 'Зарегистрировать' as buttons_text %}
+{% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
 {% endblock %}

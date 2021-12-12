@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block content %}
+{% bootstrap_messages %}
+<h1>{% block title %}{% endblock %}</h1>
+
+<form role="form" method="post">
+
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% block button %}{% endblock %}
+
+</form>
+
+{% endblock %}
