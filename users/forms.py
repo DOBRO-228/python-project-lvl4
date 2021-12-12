@@ -1,14 +1,12 @@
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 
-class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=True, label='Имя',
-                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}))
-    last_name = forms.CharField(max_length=30, required=True, label='Фамилия',
-                                widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия'})))
+class UserForm(UserCreationForm):
+    first_name = forms.CharField(required=True, label='Имя')
+    last_name = forms.CharField(required=True, label='Фамилия')
 
     class Meta:
         model = User

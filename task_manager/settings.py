@@ -10,11 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
 import dj_database_url
 from dotenv import load_dotenv
-
-import os
 
 load_dotenv()
 
@@ -30,12 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('ENVIRONMENT') == 'PROD':
-    DEBUG = False
-else:
-    DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'task-manager-228.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '*.herokuapp.com']
 
 
 # Application definition
