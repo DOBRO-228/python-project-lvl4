@@ -21,8 +21,9 @@ from django.urls import path
 
 urlpatterns = [
     path('users/', include('users.urls')),
+    path('statuses/', include('statuses.urls')),
     path('', views.HomeView.as_view(), name='home'),
-    path('login/', users_views.UserLoginView.as_view(), name='login'),
-    path('logout/', users_views.UserLogoutView.as_view(), name='logout'),
+    path('login/', users_views.LoginUserView.as_view(), name='login'),
+    path('logout/', users_views.LogoutUserView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
 ]
