@@ -1,0 +1,8 @@
+{% extends 'delete_base.html' %}
+{% load i18n %}
+
+{% block title %}{% translate 'Удаление статуса'%}{% endblock %}
+
+{% block question %}
+<p>{% translate 'Вы уверены, что хотите удалить'%} {{ status.name }}?</p>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base_list.html' %}
+{% load i18n %}
+
+{% block title %}{% translate 'Статусы' %}{% endblock %}
+
+{% block create_button %}
+<a class="btn btn-primary btn-margin" href="{% url 'statuses:create' %}">{% translate 'Создать статус' %}</a>
+{% endblock %}
+
+{% block table %}
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>{% translate 'Имя' %}</th>
+    <th>{% translate 'Дата создания' %}</th>
+    <th>{% translate 'Действия' %}</th>
+  </tr>
+</thead>
+<tbody>
+  {% for status in statuses %}
+  <tr>
+    <td>{{ status.id }}</td>
+    <td>{{ status.name }}</td>
+    <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
+    <td>
+      <a href="{% url 'statuses:update' pk=status.id %}">{% translate 'Изменить' %}</a>
+      <a href="{% url 'statuses:delete' pk=status.id %}">{% translate 'Удалить' %}</a>
+    </td>
+    {% endfor %}
+</tbody>
+{% endblock %}

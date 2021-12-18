@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'task-manager-228.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'statuses.apps.StatusesConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -158,3 +159,5 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
+FIXTURE_DIRS = [os.path.join(BASE_DIR, 'fixtures')]

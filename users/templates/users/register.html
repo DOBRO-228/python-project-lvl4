@@ -1,10 +1,8 @@
-{% extends 'users/user.html' %}
+{% extends 'create_n_update_base.html' %}
 {% load bootstrap4 %}
 {% load i18n %}
 
-{% block title %}
-{% translate 'Регистрация' %}
-{% endblock %}
+{% block title %}{% translate 'Регистрация' %}{% endblock %}
 
 {% block button %}
 {% translate 'Зарегистрировать' as buttons_text %}

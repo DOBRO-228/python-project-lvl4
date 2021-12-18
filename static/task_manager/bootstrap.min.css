@@ -20,6 +20,10 @@ a:hover {
   border: .05rem solid #fff;
 }
 
+.btn-margin {
+  margin-bottom: 10px;
+}
+
 
 /*
  * Base structure
@@ -40,7 +44,7 @@ body {
 }
 
 .cover-container {
-  max-width: 42em;
+  max-width: 60em;
 }
 
 

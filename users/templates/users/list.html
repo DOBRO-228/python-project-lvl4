@@ -1,32 +1,30 @@
-{% extends 'base.html' %}
+{% extends 'base_list.html' %}
 {% load i18n %}
 
-{% block title %} Users {% endblock %}
 
-{% block content %}
-<h1 class="cover-heading">{% translate 'Пользователи' %}</h1>
-<table class="table table-dark">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>{% translate 'Имя пользователя' %}</th>
-      <th>{% translate 'Полное имя' %}</th>
-      <th>{% translate 'Дата создания' %}</th>
-      <th>{% translate 'Действия' %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-    <tr>
-      <td>{{ user.id }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.first_name }} {{ user.last_name }}</td>
-      <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
-      <td>
-        <a href="{% url 'users:update_user' pk=user.id %}">{% translate 'Изменить' %}</a>
-        <a href="{% url 'users:delete_user' pk=user.id %}">{% translate 'Удалить' %}</a>
-      </td>
-      {% endfor %}
-  </tbody>
-</table>
+{% block title %}{% translate 'Пользователи' %}{% endblock %}
+
+{% block table %}
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>{% translate 'Имя пользователя' %}</th>
+    <th>{% translate 'Полное имя' %}</th>
+    <th>{% translate 'Дата создания' %}</th>
+    <th>{% translate 'Действия' %}</th>
+  </tr>
+</thead>
+<tbody>
+  {% for user in users %}
+  <tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.first_name }} {{ user.last_name }}</td>
+    <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+    <td>
+      <a href="{% url 'users:update' pk=user.id %}">{% translate 'Изменить' %}</a>
+      <a href="{% url 'users:delete' pk=user.id %}">{% translate 'Удалить' %}</a>
+    </td>
+    {% endfor %}
+</tbody>
 {% endblock %}
