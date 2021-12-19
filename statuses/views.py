@@ -12,7 +12,7 @@ from statuses.forms import StatusForm
 from users.views import CustomLoginRequiredMixin
 
 
-class StatusListView(generic.ListView):
+class StatusListView(CustomLoginRequiredMixin, generic.ListView):
     template_name = 'statuses/list.html'
     context_object_name = 'statuses'
     model = Status
