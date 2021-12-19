@@ -5,7 +5,7 @@ from django.urls import reverse
 
 
 class ListViewTests(TestCase):
-    fixtures = ["users.json"]
+    fixtures = ['users.json']
 
     def test_list_of_users(self):
         """
@@ -65,7 +65,7 @@ class RegisterUserViewTests(TestCase):
 
 
 class LoginUserViewTests(TestCase):
-    fixtures = ["users.json"]
+    fixtures = ['users.json']
 
     def setUp(self):
         self.first_user = User.objects.get(pk=45)
@@ -117,7 +117,7 @@ class LoginUserViewTests(TestCase):
 
 
 class UpdateUserViewTests(TestCase):
-    fixtures = ["users.json"]
+    fixtures = ['users.json']
 
     def setUp(self):
         self.first_user = User.objects.get(pk=45)
@@ -127,7 +127,6 @@ class UpdateUserViewTests(TestCase):
         """
         Checking update user.
         """
-        print()
         self.client.login(username=self.first_user.username, password='svoboda')
         update_url = reverse('users:update', args=(self.first_user.id, ))
         updated_user = {
@@ -190,7 +189,7 @@ class UpdateUserViewTests(TestCase):
 
 
 class DeleteUserViewTests(TestCase):
-    fixtures = ["users.json"]
+    fixtures = ['users.json']
 
     def setUp(self):
         self.first_user = User.objects.get(pk=45)
@@ -215,12 +214,12 @@ class DeleteUserViewTests(TestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         delete_url = reverse('users:delete', args=(self.second_user.id, ))
         response = self.client.post(delete_url, follow=True)
-        self.assertEqual(User.objects.get(pk=self.second_user.id).username, 'СВТВ')
         self.assertRedirects(
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
-        self.assertEqual(User.objects.get(pk=self.first_user.id).username, 'FBK')
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
+        self.assertEqual(User.objects.get(pk=self.second_user.id).username, 'СВТВ')
+        self.assertEqual(User.objects.get(pk=self.first_user.id).username, 'FBK')
 
     def test_delete_not_yourself(self):
         """

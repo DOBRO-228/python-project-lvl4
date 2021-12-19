@@ -23,3 +23,5 @@ migrate:
 	poetry run python3 manage.py migrate
 export_req:
 	poetry export -f requirements.txt --output requirements.txt
+make_fixture:
+	poetry run python3 manage.py dumpdata statuses.Status --pks 1,2 --indent 4 > fixtures/statuses.json
