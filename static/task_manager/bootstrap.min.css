@@ -20,10 +20,14 @@ a:hover {
   border: .05rem solid #fff;
 }
 
+.btn-custom {
+  color: #fff;
+  border-color: #007bff;
+}
+
 .btn-margin {
   margin-bottom: 10px;
 }
-
 
 /*
  * Base structure
