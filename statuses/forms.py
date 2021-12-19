@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class StatusForm(ModelForm):
-    name = forms.CharField(required=True, label='Имя')
+    name = forms.CharField(required=True, label='Имя', max_length=100)
 
     class Meta:
         model = Status

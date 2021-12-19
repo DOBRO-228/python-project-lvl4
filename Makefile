@@ -19,5 +19,7 @@ shell:
 	poetry run python3 manage.py shell
 make_migrations:
 	poetry run python3 manage.py makemigrations
+migrate:
+	poetry run python3 manage.py migrate
 export_req:
 	poetry export -f requirements.txt --output requirements.txt
