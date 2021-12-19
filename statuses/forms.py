@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
-from statuses.models import Status
 from django.utils.translation import gettext_lazy as _
+from statuses.models import Status
 
 
 class StatusForm(ModelForm):
