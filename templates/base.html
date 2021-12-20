@@ -51,6 +51,7 @@
                     <a class="nav-link" href="{% url 'users:list' %}">{% translate 'Пользователи' %}</a>
                     {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'statuses:list' %}">{% translate 'Статусы' %}</a>
+                    <a class="nav-link" href="{% url 'tasks:list' %}">{% translate 'Задачи' %}</a>
                     {% endif %}
                     {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'logout' %}">{% translate 'Выход' %}</a>

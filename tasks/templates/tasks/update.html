@@ -1,0 +1,10 @@
+{% extends 'create_n_update_base.html' %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block title %}{% translate 'Изменение статуса' %}{% endblock %}
+
+{% block button %}
+{% translate 'Изменить' as buttons_text %}
+{% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
+{% endblock %}
