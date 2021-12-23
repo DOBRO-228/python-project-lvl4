@@ -11,9 +11,11 @@ class ListViewTests(TestCase):
         """
         Checking list of created users.
         """
+        first_user = User.objects.get(pk=1)
+        second_user = User.objects.get(pk=2)
         response = self.client.get(reverse('users:list'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(list(response.context['users']), ['<User: FBK>', '<User: СВТВ>'])
+        self.assertQuerysetEqual(list(response.context['users']), [str(first_user), str(second_user)])
 
 
 class RegisterUserViewTests(TestCase):
@@ -68,7 +70,7 @@ class LoginUserViewTests(TestCase):
     fixtures = ['users.json']
 
     def setUp(self):
-        self.first_user = User.objects.get(pk=45)
+        self.first_user = User.objects.get(pk=1)
         self.url = reverse('login')
 
     def test_login(self):
@@ -120,8 +122,8 @@ class UpdateUserViewTests(TestCase):
     fixtures = ['users.json']
 
     def setUp(self):
-        self.first_user = User.objects.get(pk=45)
-        self.second_user = User.objects.get(pk=46)
+        self.first_user = User.objects.get(pk=1)
+        self.second_user = User.objects.get(pk=2)
 
     def test_update(self):
         """
@@ -142,9 +144,9 @@ class UpdateUserViewTests(TestCase):
         )
         self.assertContains(response, 'Пользователь успешно изменён')
         self.assertFalse(auth.get_user(self.client).is_authenticated)
-        self.assertEqual(User.objects.get(pk=self.first_user.id).username, 'Либертарианец')
-        self.assertEqual(User.objects.get(pk=self.first_user.id).first_name, 'Мюррей')
-        self.assertEqual(User.objects.get(pk=self.first_user.id).last_name, 'Ротбарт')
+        self.assertEqual(self.first_user.username, 'Либертарианец')
+        self.assertEqual(self.first_user.first_name, 'Мюррей')
+        self.assertEqual(self.first_user.last_name, 'Ротбарт')
 
     def test_update_without_login(self):
         """
@@ -192,8 +194,8 @@ class DeleteUserViewTests(TestCase):
     fixtures = ['users.json']
 
     def setUp(self):
-        self.first_user = User.objects.get(pk=45)
-        self.second_user = User.objects.get(pk=46)
+        self.first_user = User.objects.get(pk=1)
+        self.second_user = User.objects.get(pk=2)
         self.login_url = reverse('login')
 
     def test_delete(self):
@@ -214,12 +216,12 @@ class DeleteUserViewTests(TestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         delete_url = reverse('users:delete', args=(self.second_user.id, ))
         response = self.client.post(delete_url, follow=True)
+        self.assertTrue(User.objects.filter(pk=self.second_user.id).exists())
+        self.assertTrue(User.objects.filter(pk=self.first_user.id).exists())
         self.assertRedirects(
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
-        self.assertEqual(User.objects.get(pk=self.second_user.id).username, 'СВТВ')
-        self.assertEqual(User.objects.get(pk=self.first_user.id).username, 'FBK')
 
     def test_delete_not_yourself(self):
         """

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 
-class UserForm(UserCreationForm):
+class UserRegistrationForm(UserCreationForm):
     first_name = forms.CharField(required=True, label='Имя')
     last_name = forms.CharField(required=True, label='Фамилия')
 

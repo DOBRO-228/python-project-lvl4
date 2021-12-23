@@ -9,7 +9,7 @@ class StatusListViewTests(TestCase):
     fixtures = ['statuses.json', 'users.json']
 
     def setUp(self):
-        self.user = User.objects.get(pk=45)
+        self.user = User.objects.get(pk=1)
 
     def test_list_of_statuses(self):
         """
@@ -34,7 +34,7 @@ class CreateStatusViewTests(TestCase):
     fixtures = ['users.json']
 
     def setUp(self):
-        self.user = User.objects.get(pk=45)
+        self.user = User.objects.get(pk=1)
 
     def test_creating(self):
         """
@@ -65,7 +65,7 @@ class UpdateStatusViewTests(TestCase):
     fixtures = ['statuses.json', 'users.json']
 
     def setUp(self):
-        self.user = User.objects.get(pk=45)
+        self.user = User.objects.get(pk=1)
         self.status = Status.objects.get(pk=1)
 
     def test_updating(self):
@@ -100,7 +100,7 @@ class DeleteStatusViewTests(TestCase):
     fixtures = ['statuses.json', 'users.json']
 
     def setUp(self):
-        self.user = User.objects.get(pk=45)
+        self.user = User.objects.get(pk=1)
         self.status = Status.objects.get(pk=1)
 
     def test_delete(self):
