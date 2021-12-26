@@ -9,28 +9,31 @@ from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
 
-from .forms import UserRegistrationForm
+from users.forms import UserRegistrationForm
+
+
+class ChecksPermissions:
+    def handle_no_permission(self):
+        messages.error(self.request, self.message)
+        return redirect(self.redirect_url)
 
 
 class CustomLoginRequiredMixin(LoginRequiredMixin):
-    login_url = '/login/'
-    redirect_field_name = '/'
-
-    def handle_no_permission(self):
-        messages.error(self.request, 'Вы не авторизованы! Пожалуйста, выполните вход.')
-        return super().handle_no_permission()
+    def dispatch(self, request, *args, **kwargs):
+        self.redirect_url = 'login'
+        self.message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
+        return super().dispatch(request, *args, **kwargs)
 
 
 class IdentificationMixin(UserPassesTestMixin):
-
     def test_func(self):
         return self.request.user.id == self.kwargs['pk']
 
     def dispatch(self, request, *args, **kwargs):
         user_test_result = self.get_test_func()()
         if not user_test_result:
-            messages.error(self.request, 'У вас нет прав для изменения другого пользователя.')
-            return redirect('users:list')
+            self.redirect_url = 'users:list'
+            self.message = 'У вас нет прав для изменения другого пользователя.'
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -57,7 +60,7 @@ class RegisterUserView(SuccessMessageMixin, CreateView):
     success_message = 'Пользователь успешно зарегистрирован'
 
 
-class UpdateUserView(CustomLoginRequiredMixin, IdentificationMixin, SuccessMessageMixin, UpdateView):
+class UpdateUserView(ChecksPermissions, CustomLoginRequiredMixin, IdentificationMixin, SuccessMessageMixin, UpdateView):
     model = User
     form_class = UserRegistrationForm
     template_name = 'users/update.html'
@@ -65,8 +68,11 @@ class UpdateUserView(CustomLoginRequiredMixin, IdentificationMixin, SuccessMessa
     success_message = 'Пользователь успешно изменён'
 
 
-class DeleteUserView(CustomLoginRequiredMixin, IdentificationMixin, SuccessMessageMixin, DeleteView):
+class DeleteUserView(ChecksPermissions, CustomLoginRequiredMixin, IdentificationMixin, SuccessMessageMixin, DeleteView):
     model = User
     template_name = 'users/delete.html'
     success_url = reverse_lazy('users:list')
-    success_message = 'Пользователь успешно удалён'
+
+    def post(self, request, *args, **kwargs):
+        messages.success(request, 'Пользователь успешно удалён')
+        return super().post(request, *args, **kwargs)
