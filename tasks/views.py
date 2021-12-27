@@ -11,18 +11,6 @@ from tasks.models import Task
 from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, AuthorIdentificationMixin
 
 
-class AuthorIdentificationMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.id == Task.objects.get(author=self.kwargs['pk'])
-
-    def dispatch(self, request, *args, **kwargs):
-        user_test_result = self.get_test_func()()
-        if not user_test_result:
-            self.redirect_url = 'users:list'
-            self.message = 'У вас нет прав для изменения другого пользователя.'
-        return super().dispatch(request, *args, **kwargs)
-
-
 class TasksListView(ChecksPermissions, CustomLoginRequiredMixin, generic.ListView):
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
