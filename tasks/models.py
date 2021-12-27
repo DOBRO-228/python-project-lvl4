@@ -1,6 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
 from statuses.models import Status
-from django.contrib.auth.models import User
 
 
 class Task(models.Model):

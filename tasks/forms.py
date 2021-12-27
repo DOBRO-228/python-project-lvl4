@@ -1,8 +1,8 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 from statuses.models import Status
-from django.contrib.auth.models import User
 
 
 class TaskForm(ModelForm):

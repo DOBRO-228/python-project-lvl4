@@ -1,18 +1,17 @@
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
 from tasks.forms import TaskForm
-from users.views import CustomLoginRequiredMixin, ChecksPermissions
-
 from tasks.models import Task
+from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, AuthorIdentificationMixin
 
 
-class IdentificationMixin(UserPassesTestMixin):
+class AuthorIdentificationMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.id == Task.objects.get(author=self.kwargs['pk'])
 
