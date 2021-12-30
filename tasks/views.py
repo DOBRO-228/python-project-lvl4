@@ -1,10 +1,7 @@
-from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from tasks.forms import TaskForm
 from tasks.models import Task
@@ -12,9 +9,15 @@ from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMes
 
 
 class TasksListView(ChecksPermissions, CustomLoginRequiredMixin, generic.ListView):
+    model = Task
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
+
+
+class DetailTaskView(ChecksPermissions, CustomLoginRequiredMixin, DetailView):
     model = Task
+    template_name = 'tasks/detail.html'
+    context_object_name = 'object'
 
 
 class CreateTaskView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -23,6 +26,10 @@ class CreateTaskView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessage
     template_name = 'tasks/create.html'
     success_url = reverse_lazy('tasks:list')
     success_message = 'Задача успешно создана'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class UpdateTaskView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -33,8 +40,10 @@ class UpdateTaskView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessage
     success_message = 'Задача успешно изменена'
 
 
-class DeleteTaskView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteTaskView(
+    ChecksPermissions, AuthorIdentificationMixin, CustomLoginRequiredMixin, DeleteSuccessMessage, DeleteView
+):
     model = Task
     template_name = 'tasks/delete.html'
     success_url = reverse_lazy('tasks:list')
-    success_message = 'Задача успешна удалена'
+    success_message = 'Задача успешно удалена'
