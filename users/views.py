@@ -6,7 +6,13 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
-from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, UserIdentificationMixin
+from mixins import (
+    ChecksPermissions,
+    CustomLoginRequiredMixin,
+    DeleteSuccessMessage,
+    PermissionToDeleteMixin,
+    UserIdentificationMixin,
+)
 from users.forms import UserRegistrationForm
 
 
@@ -44,7 +50,12 @@ class UpdateUserView(
 
 
 class DeleteUserView(
-    ChecksPermissions, CustomLoginRequiredMixin, UserIdentificationMixin, DeleteSuccessMessage, DeleteView
+    ChecksPermissions,
+    CustomLoginRequiredMixin,
+    UserIdentificationMixin,
+    PermissionToDeleteMixin,
+    DeleteSuccessMessage,
+    DeleteView,
 ):
     model = User
     template_name = 'users/delete.html'

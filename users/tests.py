@@ -2,18 +2,21 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from tasks.models import Task
 
 
 class UsersTests(TestCase):
-    fixtures = ['users.json']
+    fixtures = ['users.json', 'tasks.json', 'statuses.json']
 
     def setUp(self):
         self.first_user = User.objects.get(pk=1)
         self.second_user = User.objects.get(pk=2)
+        self.first_task = Task.objects.get(pk=1)
+        self.second_task = Task.objects.get(pk=2)
 
     def test_list_of_users(self):
         """
-        Checking list of created users.
+        Checking of list of created users.
         """
         response = self.client.get(reverse('users:list'))
         self.assertEqual(response.status_code, 200)
@@ -21,7 +24,7 @@ class UsersTests(TestCase):
 
     def test_registration(self):
         """
-        Checking user registration.
+        Checking of user registration.
         """
         url = reverse('users:register')
         user = {
@@ -43,7 +46,7 @@ class UsersTests(TestCase):
 
     def test_password_validation_in_registration(self):
         """
-        Checking password validation.
+        Checking of password validation.
         """
         url = reverse('users:register')
         user_with_too_small_pas = {
@@ -66,7 +69,7 @@ class UsersTests(TestCase):
 
     def test_login(self):
         """
-        Checking login.
+        Checking of login.
         """
         user = {
             'username': self.first_user.username,
@@ -83,7 +86,7 @@ class UsersTests(TestCase):
 
     def test_login_validation(self):
         """
-        Checking login validation.
+        Checking of login validation.
         """
         user = {
             'username': self.first_user.username,
@@ -98,7 +101,7 @@ class UsersTests(TestCase):
 
     def test_logout(self):
         """
-        Checking logout.
+        Checking of logout.
         """
         self.client.force_login(self.first_user)
         response = self.client.post(reverse('logout'), follow=True)
@@ -110,7 +113,7 @@ class UsersTests(TestCase):
 
     def test_update(self):
         """
-        Checking update user.
+        Checking of update user.
         """
         self.client.force_login(self.first_user)
         update_url = reverse('users:update', args=(self.first_user.id, ))
@@ -134,7 +137,7 @@ class UsersTests(TestCase):
 
     def test_update_without_login(self):
         """
-        Checking permissions to update.
+        Checking of permissions to update.
         """
         update_url = reverse('users:update', args=(self.second_user.id, ))
         updated_user = {
@@ -154,7 +157,7 @@ class UsersTests(TestCase):
 
     def test_update_not_yourself(self):
         """
-        Checking permissions to update.
+        Checking of permissions to update.
         """
         update_url = reverse('users:update', args=(self.second_user.id, ))
         updated_user = {
@@ -175,8 +178,10 @@ class UsersTests(TestCase):
 
     def test_delete(self):
         """
-        Checking delete user.
+        Checking of delete user.
         """
+        self.first_task.delete()
+        self.second_task.delete()
         self.client.force_login(self.first_user)
         delete_url = reverse('users:delete', args=(self.first_user.id, ))
         response = self.client.post(delete_url, follow=True)
@@ -200,13 +205,44 @@ class UsersTests(TestCase):
 
     def test_delete_not_yourself(self):
         """
-        Checking permissions to delete.
+        Checking of permissions to delete.
         """
         self.client.force_login(self.first_user)
         delete_url = reverse('users:delete', args=(self.second_user.id, ))
         response = self.client.post(delete_url, follow=True)
-        self.assertEqual(User.objects.get(pk=self.second_user.id), self.second_user)
+        self.assertTrue(User.objects.filter(pk=self.second_user.id).exists())
         self.assertRedirects(
             response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'У вас нет прав для изменения другого пользователя')
+
+    def test_deletion_while_user_is_author(self):
+        """
+        Checking of deletion while task references on user.
+        """
+        self.second_task = Task.objects.get(pk=2)
+        self.second_task.performer = self.second_user
+        self.second_task.save()
+        self.client.force_login(self.first_user)
+        delete_url = reverse('users:delete', args=(self.first_user.id, ))
+        response = self.client.post(delete_url, follow=True)
+        self.assertTrue(User.objects.filter(pk=self.first_user.id).exists())
+        self.assertRedirects(
+            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True
+        )
+        self.assertContains(response, 'Невозможно удалить пользователя, потому что он используется')
+
+    def test_deletion_while_user_is_performer(self):
+        """
+        Checking of deletion while task references on user.
+        """
+        self.first_task.author = self.second_user
+        self.first_task.save()
+        self.client.force_login(self.first_user)
+        delete_url = reverse('users:delete', args=(self.first_user.id, ))
+        response = self.client.post(delete_url, follow=True)
+        self.assertTrue(User.objects.filter(pk=self.first_user.id).exists())
+        self.assertRedirects(
+            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True
+        )
+        self.assertContains(response, 'Невозможно удалить пользователя, потому что он используется')

@@ -3,9 +3,9 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
+from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage
 from statuses.forms import StatusForm
 from statuses.models import Status
-from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage
 
 
 class StatusListView(ChecksPermissions, CustomLoginRequiredMixin, generic.ListView):

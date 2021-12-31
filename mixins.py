@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.views.generic.edit import DeletionMixin
 from tasks.models import Task
 
 
@@ -39,6 +41,15 @@ class AuthorIdentificationMixin(UserPassesTestMixin):
             self.redirect_url = 'tasks:list'
             self.message = 'Задачу может удалить только её автор'
         return super().dispatch(request, *args, **kwargs)
+
+
+class PermissionToDeleteMixin(DeletionMixin):
+    def post(self, request, *args, **kwargs):
+        if request.user.created_task.all() or request.user.assigned_task.all():
+            self.redirect_url = 'users:list'
+            self.message = 'Невозможно удалить пользователя, потому что он используется'
+            return self.handle_no_permission()
+        return super().post(request, *args, **kwargs)
 
 
 class DeleteSuccessMessage:

@@ -1,9 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-
-from tasks.models import Task
 from statuses.models import Status
+from tasks.models import Task
 
 
 class TasksTests(TestCase):
@@ -25,7 +24,7 @@ class TasksTests(TestCase):
 
     def test_list_of_tasks(self):
         """
-        Checking list of tasks.
+        Checking of list of tasks.
         """
         self.client.force_login(self.first_user)
         response = self.client.get(reverse('tasks:list'))
@@ -34,7 +33,7 @@ class TasksTests(TestCase):
 
     def test_list_of_statuses_without_login(self):
         """
-        Checking list of tasks without login.
+        Checking of list of tasks without login.
         """
         response = self.client.get(reverse('tasks:list'))
         self.assertRedirects(
@@ -43,7 +42,7 @@ class TasksTests(TestCase):
 
     def test_task_creating(self):
         """
-        Checking task creating.
+        Checking of task creating.
         """
         self.client.force_login(self.first_user)
         response = self.client.post(reverse('tasks:create'), self.new_task, follow=True)
@@ -56,7 +55,7 @@ class TasksTests(TestCase):
 
     def test_task_creating_without_login(self):
         """
-        Checking task creating without login.
+        Checking of task creating without login.
         """
         response = self.client.post(reverse('statuses:create'), self.new_task, follow=True)
         self.assertRedirects(
@@ -65,7 +64,7 @@ class TasksTests(TestCase):
 
     def test_task_updating(self):
         """
-        Checking task updating.
+        Checking of task updating.
         """
         self.client.force_login(self.second_user)
         update_url = reverse('tasks:update', args=(self.first_task.id, ))
@@ -83,7 +82,7 @@ class TasksTests(TestCase):
 
     def test_status_updating_without_login(self):
         """
-        Checking permissions to update.
+        Checking of permissions to update.
         """
         update_url = reverse('tasks:update', args=(self.first_task.id, ))
         response = self.client.post(update_url, self.new_task, follow=True)
@@ -100,7 +99,7 @@ class TasksTests(TestCase):
 
     def test_task_deletion(self):
         """
-        Checking task deletion.
+        Checking of task deletion.
         """
         self.client.force_login(self.first_user)
         delete_url = reverse('tasks:delete', args=(self.first_task.id, ))
@@ -114,7 +113,7 @@ class TasksTests(TestCase):
 
     def test_task_deletion_without_login(self):
         """
-        Checking task deletion without login.
+        Checking of task deletion without login.
         """
         delete_url = reverse('tasks:delete', args=(self.first_task.id, ))
         response = self.client.post(delete_url, follow=True)

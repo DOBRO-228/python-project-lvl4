@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-
 from statuses.models import Status
 
 
@@ -15,7 +14,7 @@ class StatusesTests(TestCase):
 
     def test_list_of_statuses(self):
         """
-        Checking list of statuses.
+        Checking of list of statuses.
         """
         self.client.force_login(self.user)
         response = self.client.get(reverse('statuses:list'))
@@ -24,7 +23,7 @@ class StatusesTests(TestCase):
 
     def test_list_of_statuses_without_login(self):
         """
-        Checking list of statuses without login.
+        Checking of list of statuses without login.
         """
         response = self.client.get(reverse('statuses:list'))
         self.assertRedirects(
@@ -33,7 +32,7 @@ class StatusesTests(TestCase):
 
     def test_status_creating(self):
         """
-        Checking status creating.
+        Checking of status creating.
         """
         self.client.force_login(self.user)
         status = {'name': 'In progress'}
@@ -47,7 +46,7 @@ class StatusesTests(TestCase):
 
     def test_status_creating_without_login(self):
         """
-        Checking status creating without login.
+        Checking of status creating without login.
         """
         status = {'name': 'In progress'}
         response = self.client.post(reverse('statuses:create'), status, follow=True)
@@ -57,7 +56,7 @@ class StatusesTests(TestCase):
 
     def test_status_updating(self):
         """
-        Checking status updating.
+        Checking of status updating.
         """
         self.client.force_login(self.user)
         update_url = reverse('statuses:update', args=(self.status_completed.id, ))
@@ -71,7 +70,7 @@ class StatusesTests(TestCase):
 
     def test_status_updating_without_login(self):
         """
-        Checking permissions to update.
+        Checking of permissions to update.
         """
         update_url = reverse('statuses:update', args=(self.status_completed.id, ))
         updated_status = {'name': 'In progress'}
@@ -84,7 +83,7 @@ class StatusesTests(TestCase):
 
     def test_status_deletion(self):
         """
-        Checking status deletion.
+        Checking of status deletion.
         """
         self.client.force_login(self.user)
         delete_url = reverse('statuses:delete', args=(self.status_completed.id, ))
@@ -98,7 +97,7 @@ class StatusesTests(TestCase):
 
     def test_status_deletion_without_login(self):
         """
-        Checking status deletion without login.
+        Checking of status deletion without login.
         """
         delete_url = reverse('statuses:delete', args=(self.status_completed.id, ))
         response = self.client.post(delete_url, follow=True)

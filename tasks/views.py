@@ -3,9 +3,9 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
+from mixins import AuthorIdentificationMixin, ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage
 from tasks.forms import TaskForm
 from tasks.models import Task
-from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, AuthorIdentificationMixin
 
 
 class TasksListView(ChecksPermissions, CustomLoginRequiredMixin, generic.ListView):
