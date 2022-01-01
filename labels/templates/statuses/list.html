@@ -1,0 +1,31 @@
+{% extends 'base_list.html' %}
+{% load i18n %}
+
+{% block title %}{% translate 'Метки' %}{% endblock %}
+
+{% block create_button %}
+<a class="btn btn-custom btn-margin" href="{% url 'labels:create' %}">{% translate 'Создать метку' %}</a>
+{% endblock %}
+
+{% block table %}
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>{% translate 'Имя' %}</th>
+    <th>{% translate 'Дата создания' %}</th>
+    <th>{% translate 'Действия' %}</th>
+  </tr>
+</thead>
+<tbody>
+  {% for label in labels %}
+  <tr>
+    <td>{{ label.id }}</td>
+    <td>{{ label.name }}</td>
+    <td>{{ label.created_at|date:"d.m.Y H:i" }}</td>
+    <td>
+      <a class="btn btn-custom" href="{% url 'labels:update' pk=label.id %}">{% translate 'Изменить' %}</a>
+      <a class="btn btn-custom" href="{% url 'labels:delete' pk=label.id %}">{% translate 'Удалить' %}</a>
+    </td>
+    {% endfor %}
+</tbody>
+{% endblock %}

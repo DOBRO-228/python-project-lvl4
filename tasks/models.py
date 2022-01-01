@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from statuses.models import Status
+from labels.models import Label
 
 
 class Task(models.Model):
@@ -9,6 +10,7 @@ class Task(models.Model):
     author = models.ForeignKey(User, related_name='created_task', blank=False, null=True, on_delete=models.PROTECT)
     status = models.ForeignKey(Status, blank=False, null=True, on_delete=models.SET_NULL)
     performer = models.ForeignKey(User, related_name='assigned_task', blank=True, null=True, on_delete=models.PROTECT)
+    labels = models.ManyToManyField(Label, related_name='tasks', blank=True, null=True, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
