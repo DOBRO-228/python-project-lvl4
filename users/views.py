@@ -50,14 +50,16 @@ class UpdateUserView(
 
 
 class DeleteUserView(
-    ChecksPermissions,
-    CustomLoginRequiredMixin,
-    UserIdentificationMixin,
-    PermissionToDeleteMixin,
-    DeleteSuccessMessage,
-    DeleteView,
+    ChecksPermissions, CustomLoginRequiredMixin, UserIdentificationMixin, DeleteSuccessMessage, DeleteView
 ):
     model = User
     template_name = 'users/delete.html'
     success_url = reverse_lazy('users:list')
     success_message = 'Пользователь успешно удалён'
+
+    def post(self, request, *args, **kwargs):
+        if request.user.created_task.all() or request.user.assigned_task.all():
+            self.redirect_url = 'users:list'
+            self.message = 'Невозможно удалить пользователя, потому что он используется'
+            return self.handle_no_permission()
+        return super().post(request, *args, **kwargs)

@@ -43,15 +43,6 @@ class AuthorIdentificationMixin(UserPassesTestMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class PermissionToDeleteMixin(DeletionMixin):
-    def post(self, request, *args, **kwargs):
-        if request.user.created_task.all() or request.user.assigned_task.all():
-            self.redirect_url = 'users:list'
-            self.message = 'Невозможно удалить пользователя, потому что он используется'
-            return self.handle_no_permission()
-        return super().post(request, *args, **kwargs)
-
-
 class DeleteSuccessMessage:
     def post(self, request, *args, **kwargs):
         messages.success(request, self.success_message)
