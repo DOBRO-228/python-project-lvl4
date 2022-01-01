@@ -37,7 +37,7 @@ class DeleteLabelView(ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccess
     success_message = 'Метка успешно удалена'
 
     def post(self, request, *args, **kwargs):
-        if request.user.created_task.all() or request.user.assigned_task.all():
+        if Label.objects.get(pk=kwargs['pk']).tasks.all():
             self.redirect_url = 'labels:list'
             self.message = 'Невозможно удалить метку, потому что она используется'
             return self.handle_no_permission()

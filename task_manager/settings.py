@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'labels.apps.LabelsConfig',
     'tasks.apps.TasksConfig',
     'statuses.apps.StatusesConfig',
     'users.apps.UsersConfig',

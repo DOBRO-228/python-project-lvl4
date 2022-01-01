@@ -10,7 +10,6 @@ from mixins import (
     ChecksPermissions,
     CustomLoginRequiredMixin,
     DeleteSuccessMessage,
-    PermissionToDeleteMixin,
     UserIdentificationMixin,
 )
 from users.forms import UserRegistrationForm
