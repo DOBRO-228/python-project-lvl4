@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
-from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage
+from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, PostWithRestrictionsMixin
 from statuses.forms import StatusForm
 from statuses.models import Status
 
@@ -30,8 +30,15 @@ class UpdateStatusView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessa
     success_message = 'Статус успешно изменён'
 
 
-class DeleteStatusView(ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, DeleteView):
+class DeleteStatusView(
+    ChecksPermissions, PostWithRestrictionsMixin, CustomLoginRequiredMixin, DeleteSuccessMessage, DeleteView
+):
     model = Status
     template_name = 'statuses/delete.html'
     success_url = reverse_lazy('statuses:list')
     success_message = 'Статус успешно удалён'
+
+    def check_delete_restrictions(self, request, **kwargs):
+        self.restriction_message = 'Невозможно удалить статус, потому что он используется'
+        self.redirect_url_while_restricted = self.success_url
+        return bool(Status.objects.get(pk=kwargs['pk']).tasks.all())

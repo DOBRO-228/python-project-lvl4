@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
-from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage
+from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, PostWithRestrictionsMixin
 from labels.forms import LabelForm
 from labels.models import Label
 
@@ -19,7 +19,7 @@ class CreateLabelView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessag
     form_class = LabelForm
     template_name = 'labels/create.html'
     success_url = reverse_lazy('labels:list')
-    success_message = 'Статус успешно создан'
+    success_message = 'Метка успешно создана'
 
 
 class UpdateLabelView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -30,15 +30,15 @@ class UpdateLabelView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessag
     success_message = 'Метка успешно изменена'
 
 
-class DeleteLabelView(ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, DeleteView):
+class DeleteLabelView(
+    ChecksPermissions, PostWithRestrictionsMixin, CustomLoginRequiredMixin, DeleteSuccessMessage, DeleteView
+):
     model = Label
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels:list')
     success_message = 'Метка успешно удалена'
 
-    def post(self, request, *args, **kwargs):
-        if Label.objects.get(pk=kwargs['pk']).tasks.all():
-            self.redirect_url = 'labels:list'
-            self.message = 'Невозможно удалить метку, потому что она используется'
-            return self.handle_no_permission()
-        return super().post(request, *args, **kwargs)
+    def check_delete_restrictions(self, request, **kwargs):
+        self.restriction_message = 'Невозможно удалить метку, потому что она используется'
+        self.redirect_url_while_restricted = self.success_url
+        return bool(Label.objects.get(pk=kwargs['pk']).tasks.all())

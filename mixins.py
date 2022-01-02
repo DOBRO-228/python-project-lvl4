@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.views.generic.edit import DeletionMixin
 from tasks.models import Task
@@ -8,14 +7,14 @@ from tasks.models import Task
 
 class ChecksPermissions:
     def handle_no_permission(self):
-        messages.error(self.request, self.message)
-        return redirect(self.redirect_url)
+        messages.error(self.request, self.restriction_message)
+        return redirect(self.redirect_url_while_restricted)
 
 
 class CustomLoginRequiredMixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
-        self.redirect_url = 'login'
-        self.message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
+        self.redirect_url_while_restricted = 'login'
+        self.restriction_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -26,8 +25,8 @@ class UserIdentificationMixin(UserPassesTestMixin):
     def dispatch(self, request, *args, **kwargs):
         user_test_result = self.get_test_func()()
         if not user_test_result:
-            self.redirect_url = 'users:list'
-            self.message = 'У вас нет прав для изменения другого пользователя.'
+            self.redirect_url_while_restricted = 'users:list'
+            self.restriction_message = 'У вас нет прав для изменения другого пользователя.'
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -38,12 +37,19 @@ class AuthorIdentificationMixin(UserPassesTestMixin):
     def dispatch(self, request, *args, **kwargs):
         user_test_result = self.get_test_func()()
         if not user_test_result:
-            self.redirect_url = 'tasks:list'
-            self.message = 'Задачу может удалить только её автор'
+            self.redirect_url_while_restricted = 'tasks:list'
+            self.restriction_message = 'Задачу может удалить только её автор'
         return super().dispatch(request, *args, **kwargs)
 
 
 class DeleteSuccessMessage:
     def post(self, request, *args, **kwargs):
         messages.success(request, self.success_message)
+        return super().post(request, *args, **kwargs)
+
+
+class PostWithRestrictionsMixin(DeletionMixin):
+    def post(self, request, *args, **kwargs):
+        if self.check_delete_restrictions(request, **kwargs):
+            return self.handle_no_permission()
         return super().post(request, *args, **kwargs)

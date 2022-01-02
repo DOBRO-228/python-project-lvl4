@@ -32,12 +32,16 @@
                 <div class="col">
                     <h6>Метки:</h6>
                     <ul>
+                        {% for label in object.labels.all %}
+                            <li>{{ label.name }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
             <div class="row p-1">
                 <div class="col">
-                    <a class="btn btn-custom" href="{% url 'tasks:update' pk=object.id %}">{% translate 'Изменить' %}</a>
+                    <a class="btn btn-custom"
+                        href="{% url 'tasks:update' pk=object.id %}">{% translate 'Изменить' %}</a>
                     <a class="btn btn-custom" href="{% url 'tasks:delete' pk=object.id %}">{% translate 'Удалить' %}</a>
                 </div>
             </div>
