@@ -1,0 +1,10 @@
+[
+{
+    "model": "labels.label",
+    "pk": 1,
+    "fields": {
+        "name": "Баг",
+        "created_at": "2022-01-02T21:48:47.745Z"
+    }
+}
+]
