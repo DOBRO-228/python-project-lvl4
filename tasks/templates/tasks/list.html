@@ -1,10 +1,25 @@
 {% extends 'base_list.html' %}
 {% load i18n %}
+{% load bootstrap4 %}
+
 
 {% block title %}{% translate 'Задачи' %}{% endblock %}
 
 {% block create_button %}
 <a class="btn btn-custom btn-margin" href="{% url 'tasks:create' %}">{% translate 'Создать задачу' %}</a>
+{% endblock %}
+
+{% block filters %}
+<div class="card mb-3">
+  <div class="card-body bg-dark">
+    <form role="form" method="get">
+      {% csrf_token %}
+      {% bootstrap_form filter.form %}
+      {% translate 'Показать' as buttons_text %}
+      {% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
+    </form>
+  </div>
+</div>
 {% endblock %}
 
 {% block table %}

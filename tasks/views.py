@@ -1,23 +1,26 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import DeleteView, DetailView
+from django.views.generic import DeleteView, DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView
 from mixins import AuthorIdentificationMixin, ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage
 from tasks.forms import TaskForm
 from tasks.models import Task
+from django_filters.views import FilterView
+from tasks.filters import TaskFilter
 
 
-class TasksListView(ChecksPermissions, CustomLoginRequiredMixin, generic.ListView):
+class TasksListView(ChecksPermissions, CustomLoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
+    filterset_class = TaskFilter
 
 
 class DetailTaskView(ChecksPermissions, CustomLoginRequiredMixin, DetailView):
     model = Task
     template_name = 'tasks/detail.html'
-    context_object_name = 'object'
+    context_object_name = 'task'
 
 
 class CreateTaskView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):

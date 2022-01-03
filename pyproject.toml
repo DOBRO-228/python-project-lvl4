@@ -19,6 +19,7 @@ python-dotenv = "^0.19.1"
 wemake-python-styleguide = "^0.15.3"
 isort = "^5.9.3"
 pytest = "^6.2.5"
+django-filter = "^21.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
