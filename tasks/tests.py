@@ -6,7 +6,7 @@ from tasks.models import Task
 
 
 class TasksTests(TestCase):
-    fixtures = ['tasks.json', 'statuses.json', 'users.json']
+    fixtures = ['tasks.json', 'statuses.json', 'labels.json', 'users.json']
 
     def setUp(self):
         self.first_user = User.objects.get(pk=1)
@@ -20,6 +20,9 @@ class TasksTests(TestCase):
             'description': '228',
             'status': self.status_in_progress.id,
             'performer': self.first_user.id,
+            "label": [
+                1
+            ],
         }
 
     def test_list_of_tasks(self):
@@ -135,3 +138,16 @@ class TasksTests(TestCase):
             response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Задачу может удалить только её автор')
+
+    def test_detail_view(self):
+        """
+        Checking of detail view.
+        """
+        self.client.force_login(self.second_user)
+        self.client.post(reverse('tasks:create'), self.new_task, follow=True)
+        created_task = Task.objects.get(name=self.new_task['name'])
+        detail_task_url = reverse('tasks:detail', args=(created_task.id, ))
+        response = self.client.get(detail_task_url, follow=True)
+        print(str(created_task.label.all()))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, created_task)

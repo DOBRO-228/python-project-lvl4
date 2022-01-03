@@ -113,7 +113,7 @@ class LabelsTests(TestCase):
         Checking of deletion while task references on label.
         """
         self.task = Task.objects.get(pk=1)
-        self.task.labels.add(self.label_bug)
+        self.task.label.add(self.label_bug)
         self.task.save()
         self.client.force_login(self.user)
         delete_url = reverse('labels:delete', args=(self.label_bug.id, ))

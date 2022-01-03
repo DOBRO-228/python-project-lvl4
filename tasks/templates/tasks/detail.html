@@ -6,33 +6,33 @@
 {% block content %}
 <div class="card">
     <div class="card-header bg-secondary text-white">
-        <h2>{{ object.name }}</h2>
+        <h2>{{ task.name }}</h2>
     </div>
     <div class="card-body bg-dark">
-        <p>{{ object.description|default:"" }}</p>
+        <p>{{ task.description|default:"" }}</p>
         <hr>
         <div class="container">
             <div class="row p-1">
                 <div class="col">Автор</div>
-                <div class="col">{{ object.author|default:"" }}</div>
+                <div class="col">{{ task.author|default:"" }}</div>
             </div>
             <div class="row p-1">
                 <div class="col">Исполнитель</div>
-                <div class="col">{{ object.performer }}</div>
+                <div class="col">{{ task.performer }}</div>
             </div>
             <div class="row p-1">
                 <div class="col">Статус</div>
-                <div class="col">{{ object.status }}</div>
+                <div class="col">{{ task.status }}</div>
             </div>
             <div class="row p-1">
                 <div class="col">Дата создания</div>
-                <div class="col">{{ object.created_at }}</div>
+                <div class="col">{{ task.created_at }}</div>
             </div>
             <div class="row p-1">
                 <div class="col">
                     <h6>Метки:</h6>
                     <ul>
-                        {% for label in object.labels.all %}
+                        {% for label in task.label.all %}
                             <li>{{ label.name }}</li>
                         {% endfor %}
                     </ul>
@@ -41,8 +41,8 @@
             <div class="row p-1">
                 <div class="col">
                     <a class="btn btn-custom"
-                        href="{% url 'tasks:update' pk=object.id %}">{% translate 'Изменить' %}</a>
-                    <a class="btn btn-custom" href="{% url 'tasks:delete' pk=object.id %}">{% translate 'Удалить' %}</a>
+                        href="{% url 'tasks:update' pk=task.id %}">{% translate 'Изменить' %}</a>
+                    <a class="btn btn-custom" href="{% url 'tasks:delete' pk=task.id %}">{% translate 'Удалить' %}</a>
                 </div>
             </div>
         </div>

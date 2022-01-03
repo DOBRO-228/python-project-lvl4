@@ -65,4 +65,4 @@ class DeleteUserView(
     def check_delete_restrictions(self, request, **kwargs):
         self.restriction_message = 'Невозможно удалить пользователя, потому что он используется'
         self.redirect_url_while_restricted = self.success_url
-        return bool(request.user.created_task.all() or request.user.assigned_task.all())
+        return bool(request.user.created_tasks.all() or request.user.assigned_tasks.all())

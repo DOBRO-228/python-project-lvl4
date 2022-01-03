@@ -14,8 +14,8 @@ class TaskForm(ModelForm):
     performer = forms.ModelChoiceField(
         queryset=User.objects.all(), label='Исполнитель', required=False, widget=forms.Select()
     )
-    labels = forms.ModelMultipleChoiceField(queryset=Label.objects.all(), label='Метки', required=False)
+    label = forms.ModelMultipleChoiceField(queryset=Label.objects.all(), label='Метки', required=False)
 
     class Meta:
         model = Task
-        fields = ['name', 'description', 'status', 'performer', 'labels']
+        fields = ['name', 'description', 'status', 'performer', 'label']
