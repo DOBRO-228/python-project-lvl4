@@ -2,10 +2,11 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from statuses.models import Status
+from tasks.models import Task
 
 
 class StatusesTests(TestCase):
-    fixtures = ['statuses.json', 'users.json']
+    fixtures = ['statuses.json', 'tasks.json', 'users.json']
 
     def setUp(self):
         self.user = User.objects.get(pk=1)
@@ -85,6 +86,9 @@ class StatusesTests(TestCase):
         """
         Checking of status deletion.
         """
+        self.task = Task.objects.get(pk=1)
+        self.task.status = self.status_in_progress
+        self.task.save()
         self.client.force_login(self.user)
         delete_url = reverse('statuses:delete', args=(self.status_completed.id, ))
         response = self.client.post(delete_url, follow=True)
@@ -106,3 +110,16 @@ class StatusesTests(TestCase):
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def test_restrictions_to_delete(self):
+        """
+        Checking of deletion while task references on status.
+        """
+        self.client.force_login(self.user)
+        delete_url = reverse('statuses:delete', args=(self.status_completed.id, ))
+        response = self.client.post(delete_url, follow=True)
+        self.assertTrue(Status.objects.filter(pk=self.status_completed.id).exists())
+        self.assertRedirects(
+            response, '/statuses/', status_code=302, target_status_code=200, fetch_redirect_response=True
+        )
+        self.assertContains(response, 'Невозможно удалить статус, потому что он используется')

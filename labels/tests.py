@@ -2,10 +2,11 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from labels.models import Label
+from tasks.models import Task
 
 
 class LabelsTests(TestCase):
-    fixtures = ['labels.json', 'users.json']
+    fixtures = ['labels.json', 'tasks.json', 'statuses.json', 'users.json']
 
     def setUp(self):
         self.user = User.objects.get(pk=1)
@@ -59,13 +60,13 @@ class LabelsTests(TestCase):
         """
         self.client.force_login(self.user)
         update_url = reverse('labels:update', args=(self.label_bug.id, ))
-        updated_label = {'name': 'Баг'}
+        updated_label = {'name': 'Релиз'}
         response = self.client.post(update_url, updated_label, follow=True)
         self.assertRedirects(
             response, '/labels/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Метка успешно изменена')
-        self.assertEqual(Label.objects.get(pk=self.label_bug.id).name, 'Баг')
+        self.assertEqual(Label.objects.get(pk=self.label_bug.id).name, 'Релиз')
 
     def test_label_updating_without_login(self):
         """
@@ -101,8 +102,24 @@ class LabelsTests(TestCase):
         """
         delete_url = reverse('labels:delete', args=(self.label_bug.id, ))
         response = self.client.post(delete_url, follow=True)
-        self.assertEqual(Label.objects.get(pk=self.label_bug.id), self.label_bug)
+        self.assertTrue(Label.objects.filter(pk=self.label_bug.id).exists())
         self.assertRedirects(
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def test_restrictions_to_delete(self):
+        """
+        Checking of deletion while task references on label.
+        """
+        self.task = Task.objects.get(pk=1)
+        self.task.labels.add(self.label_bug)
+        self.task.save()
+        self.client.force_login(self.user)
+        delete_url = reverse('labels:delete', args=(self.label_bug.id, ))
+        response = self.client.post(delete_url, follow=True)
+        self.assertTrue(Label.objects.filter(pk=self.label_bug.id).exists())
+        self.assertRedirects(
+            response, '/labels/', status_code=302, target_status_code=200, fetch_redirect_response=True
+        )
+        self.assertContains(response, 'Невозможно удалить метку, потому что она используется')

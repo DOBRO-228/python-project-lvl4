@@ -31,7 +31,7 @@ class TasksTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(list(response.context['tasks']), [self.first_task, self.second_task])
 
-    def test_list_of_statuses_without_login(self):
+    def test_list_of_tasks_without_login(self):
         """
         Checking of list of tasks without login.
         """
@@ -80,7 +80,7 @@ class TasksTests(TestCase):
         self.assertEqual(self.first_task.status, self.status_in_progress)
         self.assertEqual(self.first_task.performer, self.first_user)
 
-    def test_status_updating_without_login(self):
+    def test_task_updating_without_login(self):
         """
         Checking of permissions to update.
         """
@@ -117,8 +117,21 @@ class TasksTests(TestCase):
         """
         delete_url = reverse('tasks:delete', args=(self.first_task.id, ))
         response = self.client.post(delete_url, follow=True)
-        self.assertEqual(Task.objects.get(pk=self.first_task.id), self.first_task)
+        self.assertTrue(Task.objects.filter(pk=self.first_task.id).exists())
         self.assertRedirects(
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def test_restrictions_to_delete(self):
+        """
+        Checking of deletion while user isn't an author.
+        """
+        self.client.force_login(self.second_user)
+        delete_url = reverse('tasks:delete', args=(self.first_task.id, ))
+        response = self.client.post(delete_url, follow=True)
+        self.assertTrue(Task.objects.filter(pk=self.first_task.id).exists())
+        self.assertRedirects(
+            response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True
+        )
+        self.assertContains(response, 'Задачу может удалить только её автор')
