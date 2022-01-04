@@ -1,16 +1,22 @@
 from django.contrib.auth.models import User
 from django.db import models
-from statuses.models import Status
 from labels.models import Label
+from statuses.models import Status
 
 
 class Task(models.Model):
-    name = models.CharField(max_length=150, blank=False)
-    description = models.TextField(blank=True)
-    author = models.ForeignKey(User, related_name='created_tasks', blank=False, null=True, on_delete=models.PROTECT)
-    status = models.ForeignKey(Status, related_name='tasks', blank=False, null=True, on_delete=models.PROTECT)
-    performer = models.ForeignKey(User, related_name='assigned_tasks', blank=True, null=True, on_delete=models.PROTECT)
-    label = models.ManyToManyField(Label, related_name='tasks', blank=True)
+    name = models.CharField(max_length=150, blank=False, verbose_name='Имя')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    author = models.ForeignKey(
+        User, related_name='created_tasks', blank=False, null=False, on_delete=models.PROTECT, verbose_name='Автор'
+    )
+    status = models.ForeignKey(
+        Status, related_name='tasks', blank=False, null=True, on_delete=models.PROTECT, verbose_name='Статус'
+    )
+    performer = models.ForeignKey(
+        User, related_name='assigned_tasks', blank=True, null=True, on_delete=models.PROTECT, verbose_name='Исполнитель'
+    )
+    labels = models.ManyToManyField(Label, related_name='tasks', blank=True, verbose_name='Метки')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

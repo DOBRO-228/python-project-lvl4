@@ -3,35 +3,34 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DeleteView
 from django.views.generic.edit import CreateView, UpdateView
-from mixins import ChecksPermissions, CustomLoginRequiredMixin, DeleteSuccessMessage, PostWithRestrictionsMixin
-from statuses.forms import StatusForm
+from mixins import ChecksPermissionsMixin, CustomLoginRequiredMixin, DeleteSuccessMessageMixin, DeleteWithRestrictionsMixin
 from statuses.models import Status
 
 
-class StatusListView(ChecksPermissions, CustomLoginRequiredMixin, generic.ListView):
+class StatusListView(ChecksPermissionsMixin, CustomLoginRequiredMixin, generic.ListView):
     model = Status
     template_name = 'statuses/list.html'
     context_object_name = 'statuses'
 
 
-class CreateStatusView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):
+class CreateStatusView(ChecksPermissionsMixin, CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Status
-    form_class = StatusForm
     template_name = 'statuses/create.html'
     success_url = reverse_lazy('statuses:list')
     success_message = 'Статус успешно создан'
+    fields = ['name']
 
 
-class UpdateStatusView(ChecksPermissions, CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateStatusView(ChecksPermissionsMixin, CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Status
-    form_class = StatusForm
     template_name = 'statuses/update.html'
     success_url = reverse_lazy('statuses:list')
     success_message = 'Статус успешно изменён'
+    fields = ['name']
 
 
 class DeleteStatusView(
-    ChecksPermissions, PostWithRestrictionsMixin, CustomLoginRequiredMixin, DeleteSuccessMessage, DeleteView
+    ChecksPermissionsMixin, DeleteWithRestrictionsMixin, CustomLoginRequiredMixin, DeleteSuccessMessageMixin, DeleteView
 ):
     model = Status
     template_name = 'statuses/delete.html'

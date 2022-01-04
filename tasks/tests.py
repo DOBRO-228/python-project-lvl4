@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from labels.models import Label
 from statuses.models import Status
 from tasks.models import Task
 
@@ -15,14 +16,13 @@ class TasksTests(TestCase):
         self.second_task = Task.objects.get(pk=2)
         self.status_completed = Status.objects.get(pk=1)
         self.status_in_progress = Status.objects.get(pk=2)
-        self.new_task = {
+        self.label_bug = Label.objects.get(pk=1)
+        self.new_task_data = {
             'name': 'Salam',
             'description': '228',
             'status': self.status_in_progress.id,
             'performer': self.first_user.id,
-            "label": [
-                1
-            ],
+            'labels': [self.label_bug.id],
         }
 
     def test_list_of_tasks(self):
@@ -48,19 +48,19 @@ class TasksTests(TestCase):
         Checking of task creating.
         """
         self.client.force_login(self.first_user)
-        response = self.client.post(reverse('tasks:create'), self.new_task, follow=True)
+        response = self.client.post(reverse('tasks:create'), self.new_task_data, follow=True)
         self.assertRedirects(
             response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
         self.assertContains(response, 'Задача успешно создана')
-        created_task = Task.objects.get(name=self.new_task['name'])
+        created_task = Task.objects.get(name=self.new_task_data['name'])
         self.assertEquals(created_task.name, 'Salam')
 
     def test_task_creating_without_login(self):
         """
         Checking of task creating without login.
         """
-        response = self.client.post(reverse('statuses:create'), self.new_task, follow=True)
+        response = self.client.post(reverse('statuses:create'), self.new_task_data, follow=True)
         self.assertRedirects(
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
@@ -71,7 +71,7 @@ class TasksTests(TestCase):
         """
         self.client.force_login(self.second_user)
         update_url = reverse('tasks:update', args=(self.first_task.id, ))
-        response = self.client.post(update_url, self.new_task, follow=True)
+        response = self.client.post(update_url, self.new_task_data, follow=True)
         self.assertRedirects(
             response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
@@ -88,7 +88,7 @@ class TasksTests(TestCase):
         Checking of permissions to update.
         """
         update_url = reverse('tasks:update', args=(self.first_task.id, ))
-        response = self.client.post(update_url, self.new_task, follow=True)
+        response = self.client.post(update_url, self.new_task_data, follow=True)
         self.assertRedirects(
             response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True
         )
@@ -144,10 +144,15 @@ class TasksTests(TestCase):
         Checking of detail view.
         """
         self.client.force_login(self.second_user)
-        self.client.post(reverse('tasks:create'), self.new_task, follow=True)
-        created_task = Task.objects.get(name=self.new_task['name'])
+        self.client.post(reverse('tasks:create'), self.new_task_data, follow=True)
+        created_task = Task.objects.get(name=self.new_task_data['name'])
         detail_task_url = reverse('tasks:detail', args=(created_task.id, ))
         response = self.client.get(detail_task_url, follow=True)
-        print(str(created_task.label.all()))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, created_task)
+        self.assertContains(response, self.new_task_data['name'])
+        self.assertContains(response, self.new_task_data['description'])
+        self.assertContains(response, self.new_task_data['performer'])
+        self.assertContains(response, self.second_user)
+        self.assertContains(response, self.new_task_data['status'])
+        self.assertContains(response, self.label_bug)

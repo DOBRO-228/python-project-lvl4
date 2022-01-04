@@ -3,20 +3,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views import generic
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, ListView
 from django.views.generic.edit import CreateView, UpdateView
 from mixins import (
-    ChecksPermissions,
+    ChecksPermissionsMixin,
     CustomLoginRequiredMixin,
-    DeleteSuccessMessage,
-    PostWithRestrictionsMixin,
-    UserIdentificationMixin,
+    DeleteSuccessMessageMixin,
+    DeleteWithRestrictionsMixin,
 )
+from users.mixins import UserIdentificationMixin
 from users.forms import UserRegistrationForm
 
 
-class ListUserView(generic.ListView):
+class ListUserView(ListView):
     template_name = 'users/list.html'
     context_object_name = 'users'
     model = User
@@ -40,7 +39,7 @@ class RegisterUserView(SuccessMessageMixin, CreateView):
 
 
 class UpdateUserView(
-    ChecksPermissions, CustomLoginRequiredMixin, UserIdentificationMixin, SuccessMessageMixin, UpdateView
+    ChecksPermissionsMixin, CustomLoginRequiredMixin, UserIdentificationMixin, SuccessMessageMixin, UpdateView
 ):
     model = User
     form_class = UserRegistrationForm
@@ -50,11 +49,11 @@ class UpdateUserView(
 
 
 class DeleteUserView(
-    ChecksPermissions,
+    ChecksPermissionsMixin,
     CustomLoginRequiredMixin,
     UserIdentificationMixin,
-    PostWithRestrictionsMixin,
-    DeleteSuccessMessage,
+    DeleteWithRestrictionsMixin,
+    DeleteSuccessMessageMixin,
     DeleteView,
 ):
     model = User

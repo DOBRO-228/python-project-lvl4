@@ -13,7 +13,6 @@
 <div class="card mb-3">
   <div class="card-body bg-dark">
     <form role="form" method="get">
-      {% csrf_token %}
       {% bootstrap_form filter.form %}
       {% translate 'Показать' as buttons_text %}
       {% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
