@@ -1,5 +1,5 @@
 lint:
-	poetry run flake8 task_manager users
+	poetry run flake8 labels statuses tasks users mixins.py
 test:
 	poetry run python3 manage.py test
 coverage:
