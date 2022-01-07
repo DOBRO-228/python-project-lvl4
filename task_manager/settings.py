@@ -174,3 +174,4 @@ ROLLBAR = {
 }
 
 rollbar.init(**ROLLBAR)
+rollbar.report_message('Rollbar is configured correctly')
