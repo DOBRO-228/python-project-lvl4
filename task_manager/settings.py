@@ -169,7 +169,7 @@ FIXTURE_DIRS = [os.path.join(BASE_DIR, 'fixtures')]
 
 ROLLBAR = {
     'access_token': os.environ.get('ROLLBAR_ACCESS_TOKEN'),
-    'environment': 'development' if DEBUG else 'production',
+    'environment': os.environ.get('ENVIRONMENT'),
     'root': BASE_DIR,
 }
 
