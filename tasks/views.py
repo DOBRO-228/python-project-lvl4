@@ -1,5 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django_filters.views import FilterView
@@ -32,7 +33,7 @@ class CreateTaskView(CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Task
     template_name = 'tasks/create.html'
     success_url = reverse_lazy('tasks:list')
-    success_message = 'Задача успешно создана'
+    success_message = _('Task created successfully')
     fields = ['name', 'description', 'status', 'performer', 'labels']
 
     def form_valid(self, form):
@@ -55,7 +56,7 @@ class UpdateTaskView(CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Task
     template_name = 'tasks/update.html'
     success_url = reverse_lazy('tasks:list')
-    success_message = 'Задача успешно изменена'
+    success_message = _('Task changed successfully')
     fields = ['name', 'description', 'status', 'performer', 'labels']
 
 
@@ -65,9 +66,9 @@ class DeleteTaskView(CustomLoginRequiredMixin, AuthorIdentificationMixin, Delete
     model = Task
     template_name = 'tasks/delete.html'
     success_url = reverse_lazy('tasks:list')
-    success_message = 'Задача успешно удалена'
+    success_message = _('Task deleted successfully')
 
-    def check_delete_restrictions(self, request, **kwargs):
+    def check_permissions_to_delete(self, request, **kwargs):
         """There aren't restrictions to delete.
 
         Args:

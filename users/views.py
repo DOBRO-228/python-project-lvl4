@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from mixins import CustomLoginRequiredMixin, DeleteViewWithRestrictions
@@ -21,14 +22,14 @@ class ListUserView(ListView):
 class LoginUserView(SuccessMessageMixin, LoginView):
     """Login View."""
 
-    success_message = 'Вы залогинены'
+    success_message = _('You are logged in')
 
 
 class LogoutUserView(LogoutView):
     """Logout View."""
 
     def dispatch(self, request, *args, **kwargs):
-        """Check that user can delete the Label.
+        """Add INFO message.
 
         Args:
             request: HTTP request.
@@ -39,7 +40,7 @@ class LogoutUserView(LogoutView):
             Inherited method but with message.
 
         """
-        messages.add_message(request, messages.INFO, 'Вы разлогинены')
+        messages.add_message(request, messages.INFO, _('You are logged out'))
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -49,7 +50,7 @@ class RegisterUserView(SuccessMessageMixin, CreateView):
     form_class = UserRegistrationForm
     template_name = 'users/register.html'
     success_url = reverse_lazy('login')
-    success_message = 'Пользователь успешно зарегистрирован'
+    success_message = _('User registered successfully')
 
 
 class UpdateUserView(  # Noqa: WPS215
@@ -61,7 +62,7 @@ class UpdateUserView(  # Noqa: WPS215
     form_class = UserRegistrationForm
     template_name = 'users/update.html'
     success_url = reverse_lazy('users:list')
-    success_message = 'Пользователь успешно изменён'
+    success_message = _('User changed successfully')
 
 
 class DeleteUserView(CustomLoginRequiredMixin, UserIdentificationMixin, DeleteViewWithRestrictions):
@@ -70,9 +71,9 @@ class DeleteUserView(CustomLoginRequiredMixin, UserIdentificationMixin, DeleteVi
     model = User
     template_name = 'users/delete.html'
     success_url = reverse_lazy('users:list')
-    success_message = 'Пользователь успешно удалён'
+    success_message = _('User deleted successfully')
 
-    def check_delete_restrictions(self, request, **kwargs):
+    def check_permissions_to_delete(self, request, **kwargs):
         """Check that user can delete User object.
 
         Args:
@@ -81,8 +82,7 @@ class DeleteUserView(CustomLoginRequiredMixin, UserIdentificationMixin, DeleteVi
 
         Returns:
             True if restricted, False otherwise.
-
         """
-        self.restriction_message = 'Невозможно удалить пользователя, потому что он используется'
+        self.restriction_message = _('Impossible to delete an user because it is in use')
         self.redirect_url_while_restricted = self.success_url
         return bool(request.user.created_tasks.all() or request.user.assigned_tasks.all())

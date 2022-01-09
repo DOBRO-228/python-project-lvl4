@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.utils.translation import gettext_lazy as _
+
 from tasks.models import Task
 
 
@@ -15,5 +17,5 @@ class AuthorIdentificationMixin(UserPassesTestMixin):
         user_test_result = self.get_test_func()()
         if not user_test_result:
             self.redirect_url_while_restricted = 'tasks:list'
-            self.restriction_message = 'Задачу может удалить только её автор'
+            self.restriction_message = _('Only author can delete a task')
         return super().dispatch(request, *args, **kwargs)

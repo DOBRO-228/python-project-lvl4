@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView
 
 
@@ -23,7 +24,7 @@ class CustomLoginRequiredMixin(HandleNoPermissionMixin, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         """Dispatch class method with error message and redirect."""
         self.redirect_url_while_restricted = 'login'
-        self.restriction_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
+        self.restriction_message = _('You are not authorized! Please sign in.')
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -31,7 +32,7 @@ class DeleteSuccessMessageMixin(object):
     """Custom LoginRequiredMixin."""
 
     def delete(self, request, *args, **kwargs):
-        """Add success message of deletion object."""
+        """Add success message when delete the object."""
         messages.success(request, self.success_message)
         return super().delete(request, *args, **kwargs)
 
@@ -40,7 +41,7 @@ class DeleteViewWithRestrictions(DeleteSuccessMessageMixin, DeleteView):
     """DeleteView with checking permissions to delete."""
 
     def delete(self, request, *args, **kwargs):
-        """Add check for deletion object."""
-        if self.check_delete_restrictions(request, **kwargs):
+        """Before deletion of object check permissions to do that."""
+        if self.check_permissions_to_delete(request, **kwargs):
             return self.handle_no_permission()
         return super().delete(request, *args, **kwargs)

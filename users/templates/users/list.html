@@ -2,16 +2,16 @@
 {% load i18n %}
 
 
-{% block title %}{% translate 'Пользователи' %}{% endblock %}
+{% block title %}{% translate 'User' %}{% endblock %}
 
 {% block table %}
 <thead>
   <tr>
     <th>ID</th>
-    <th>{% translate 'Имя пользователя' %}</th>
-    <th>{% translate 'Полное имя' %}</th>
-    <th>{% translate 'Дата создания' %}</th>
-    <th>{% translate 'Действия' %}</th>
+    <th>{% translate 'Username' %}</th>
+    <th>{% translate 'Full name' %}</th>
+    <th>{% translate 'Created at' %}</th>
+    <th>{% translate 'Actions' %}</th>
   </tr>
 </thead>
 <tbody>
@@ -22,8 +22,8 @@
     <td>{{ user.first_name }} {{ user.last_name }}</td>
     <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
     <td>
-      <a class="btn btn-custom" href="{% url 'users:update' pk=user.id %}">{% translate 'Изменить' %}</a>
-      <a class="btn btn-custom" href="{% url 'users:delete' pk=user.id %}">{% translate 'Удалить' %}</a>
+      <a class="btn btn-custom" href="{% url 'users:update' pk=user.id %}">{% translate 'Edit' %}</a>
+      <a class="btn btn-custom" href="{% url 'users:delete' pk=user.id %}">{% translate 'Delete' %}</a>
     </td>
     {% endfor %}
 </tbody>

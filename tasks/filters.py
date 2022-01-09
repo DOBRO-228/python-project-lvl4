@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
 from labels.models import Label
 from tasks.models import Task
@@ -7,8 +8,8 @@ from tasks.models import Task
 class TaskFilter(FilterSet):
     """FilterSet for tasks."""
 
-    labels = ModelChoiceFilter(label='Метка', queryset=Label.objects.all())
-    self_tasks = BooleanFilter(label='Только свои задачи', method='self_tasks_filter', widget=forms.CheckboxInput)
+    labels = ModelChoiceFilter(label=_('Label'), queryset=Label.objects.all())
+    self_tasks = BooleanFilter(label=_('Self tasks'), method='self_tasks_filter', widget=forms.CheckboxInput)
 
     class Meta(object):  # Noqa: D106
         model = Task
@@ -20,7 +21,7 @@ class TaskFilter(FilterSet):
         Args:
             queryset: Queryset which was created by other filters before.
             name(str): Filter's name.
-            value(bool): Filter's value .
+            value(bool): Filter's value.
 
         Returns:
             Queryset.

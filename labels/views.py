@@ -1,5 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from labels.models import Label
@@ -20,7 +21,7 @@ class CreateLabelView(CustomLoginRequiredMixin, SuccessMessageMixin, CreateView)
     model = Label
     template_name = 'labels/create.html'
     success_url = reverse_lazy('labels:list')
-    success_message = 'Метка успешно создана'
+    success_message = _('Label created successfully')
     fields = ['name']
 
 
@@ -30,7 +31,7 @@ class UpdateLabelView(CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView)
     model = Label
     template_name = 'labels/update.html'
     success_url = reverse_lazy('labels:list')
-    success_message = 'Метка успешно изменена'
+    success_message = _('Label changed successfully')
     fields = ['name']
 
 
@@ -40,9 +41,9 @@ class DeleteLabelView(CustomLoginRequiredMixin, DeleteViewWithRestrictions):
     model = Label
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels:list')
-    success_message = 'Метка успешно удалена'
+    success_message = _('Label deleted successfully')
 
-    def check_delete_restrictions(self, request, **kwargs):
+    def check_permissions_to_delete(self, request, **kwargs):
         """Check that user can delete the Label.
 
         Args:
@@ -53,6 +54,6 @@ class DeleteLabelView(CustomLoginRequiredMixin, DeleteViewWithRestrictions):
             True if restricted, False otherwise.
 
         """
-        self.restriction_message = 'Невозможно удалить метку, потому что она используется'
+        self.restriction_message = _('Impossible to delete a label because it is in use')
         self.redirect_url_while_restricted = self.success_url
         return bool(Label.objects.get(pk=kwargs['pk']).tasks.all())

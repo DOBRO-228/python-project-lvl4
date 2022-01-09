@@ -1,19 +1,19 @@
 {% extends 'base_list.html' %}
 {% load i18n %}
 
-{% block title %}{% translate 'Метки' %}{% endblock %}
+{% block title %}{% translate 'Labels' %}{% endblock %}
 
 {% block create_button %}
-<a class="btn btn-custom btn-margin" href="{% url 'labels:create' %}">{% translate 'Создать метку' %}</a>
+<a class="btn btn-custom btn-margin" href="{% url 'labels:create' %}">{% translate 'Create a label' %}</a>
 {% endblock %}
 
 {% block table %}
 <thead>
   <tr>
     <th>ID</th>
-    <th>{% translate 'Имя' %}</th>
-    <th>{% translate 'Дата создания' %}</th>
-    <th>{% translate 'Действия' %}</th>
+    <th>{% translate 'Name' %}</th>
+    <th>{% translate 'Created at' %}</th>
+    <th>{% translate 'Actions' %}</th>
   </tr>
 </thead>
 <tbody>
@@ -23,8 +23,8 @@
     <td>{{ label.name }}</td>
     <td>{{ label.created_at|date:"d.m.Y H:i" }}</td>
     <td>
-      <a class="btn btn-custom" href="{% url 'labels:update' pk=label.id %}">{% translate 'Изменить' %}</a>
-      <a class="btn btn-custom" href="{% url 'labels:delete' pk=label.id %}">{% translate 'Удалить' %}</a>
+      <a class="btn btn-custom" href="{% url 'labels:update' pk=label.id %}">{% translate 'Edit' %}</a>
+      <a class="btn btn-custom" href="{% url 'labels:delete' pk=label.id %}">{% translate 'Delete' %}</a>
     </td>
     {% endfor %}
 </tbody>

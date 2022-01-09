@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.utils.translation import gettext_lazy as _
 
 
 class UserIdentificationMixin(UserPassesTestMixin):
@@ -13,5 +14,5 @@ class UserIdentificationMixin(UserPassesTestMixin):
         user_test_result = self.get_test_func()()
         if not user_test_result:
             self.redirect_url_while_restricted = 'users:list'
-            self.restriction_message = 'У вас нет прав для изменения другого пользователя.'
+            self.restriction_message = _("You don't have permissions to edit another user.")
         return super().dispatch(request, *args, **kwargs)

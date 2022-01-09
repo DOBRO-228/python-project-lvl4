@@ -1,5 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from mixins import CustomLoginRequiredMixin, DeleteViewWithRestrictions
@@ -20,7 +21,7 @@ class CreateStatusView(CustomLoginRequiredMixin, SuccessMessageMixin, CreateView
     model = Status
     template_name = 'statuses/create.html'
     success_url = reverse_lazy('statuses:list')
-    success_message = 'Статус успешно создан'
+    success_message = _('Status created successfully')
     fields = ['name']
 
 
@@ -30,7 +31,7 @@ class UpdateStatusView(CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView
     model = Status
     template_name = 'statuses/update.html'
     success_url = reverse_lazy('statuses:list')
-    success_message = 'Статус успешно изменён'
+    success_message = _('Status changed successfully')
     fields = ['name']
 
 
@@ -40,9 +41,9 @@ class DeleteStatusView(CustomLoginRequiredMixin, DeleteViewWithRestrictions):
     model = Status
     template_name = 'statuses/delete.html'
     success_url = reverse_lazy('statuses:list')
-    success_message = 'Статус успешно удалён'
+    success_message = _('Status deleted successfully')
 
-    def check_delete_restrictions(self, request, **kwargs):
+    def check_permissions_to_delete(self, request, **kwargs):
         """Check that user can delete Status object.
 
         Args:
@@ -52,6 +53,6 @@ class DeleteStatusView(CustomLoginRequiredMixin, DeleteViewWithRestrictions):
         Returns:
             True if restricted, False otherwise.
         """
-        self.restriction_message = 'Невозможно удалить статус, потому что он используется'
+        self.restriction_message = _('Impossible to delete a status because it is in use')
         self.redirect_url_while_restricted = self.success_url
         return bool(Status.objects.get(pk=kwargs['pk']).tasks.all())

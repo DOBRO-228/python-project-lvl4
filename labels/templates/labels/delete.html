@@ -1,8 +1,8 @@
 {% extends 'delete_base.html' %}
 {% load i18n %}
 
-{% block title %}{% translate 'Удаление метки'%}{% endblock %}
+{% block title %}{% translate 'Deleting a label'%}{% endblock %}
 
 {% block question %}
-<p>{% translate 'Вы уверены, что хотите удалить'%} {{ label.name }}?</p>
+<p>{% translate 'Are you sure that you want to delete'%} {{ label.name }}?</p>
 {% endblock %}

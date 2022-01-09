@@ -3,14 +3,14 @@
 {% load bootstrap4 %}
 {% load i18n %}
 
-{% block title %}{% translate 'Вход' %}{% endblock %}
+{% block title %}{% translate 'Log In' %}{% endblock %}
 
 {% block content %}
 
 <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    {% translate 'Войти' as buttons_text %}
+    {% translate 'Log In' as buttons_text %}
     {% bootstrap_button buttons_text button_type="submit" button_class="btn-primary" %}
 </form>
 
