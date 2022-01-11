@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.utils.translation import gettext_lazy as _
-
 from tasks.models import Task
 
 

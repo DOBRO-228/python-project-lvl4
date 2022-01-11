@@ -1,3 +1,5 @@
+install:
+	poetry install
 lint:
 	poetry run flake8 labels statuses tasks users mixins.py
 test:
