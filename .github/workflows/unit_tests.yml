@@ -9,6 +9,10 @@ on:
 
 jobs:
   # This workflow contains a single job called "build"
+  env:
+      ROLLBAR_ACCESS_TOKEN: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ENVIRONMENT: DEV
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -27,7 +31,6 @@ jobs:
         run: |
           pip install poetry
           python -m pip install --upgrade pip
-          pip install flake8 pytest
           poetry update
           make install          
   
