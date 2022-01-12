@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import ast
 import os
 from pathlib import Path
 
@@ -31,7 +32,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+
+DEBUG = ast.literal_eval(os.environ.get('DEBUG'))
+
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '.herokuapp.com']
 
@@ -90,10 +93,12 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {}
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+}
 
+DATABASES['default']['OPTIONS'].pop('sslmode')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -134,10 +139,6 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -176,4 +177,3 @@ ROLLBAR = {
 }
 
 rollbar.init(**ROLLBAR)
-rollbar.report_message('Rollbar is configured correctly')
