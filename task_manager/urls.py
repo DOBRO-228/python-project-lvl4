@@ -12,17 +12,17 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-import task_manager.views as views
-import users.views as users_views
+"""  # Noqa: D400
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from task_manager.views import HomeView
+from users.views import LoginUserView, LogoutUserView
 
 urlpatterns = [
-    path('', views.HomeView.as_view(), name='home'),
-    path('login/', users_views.LoginUserView.as_view(), name='login'),
-    path('logout/', users_views.LogoutUserView.as_view(), name='logout'),
+    path('', HomeView.as_view(), name='home'),
+    path('login/', LoginUserView.as_view(), name='login'),
+    path('logout/', LogoutUserView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('statuses/', include('statuses.urls')),
