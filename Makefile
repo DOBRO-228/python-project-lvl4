@@ -8,7 +8,7 @@ coverage:
 	poetry run coverage run --source='.' manage.py test
 	poetry run coverage report
 test-coverage_mine:
-	poetry run pytest --cov=page_loader
+	poetry run pytest --cov=users
 sort:
 	poetry run isort .
 start:

@@ -1,4 +1,4 @@
-name: Unit tests
+name: Coverage tests
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
@@ -31,4 +32,4 @@ jobs:
           ENVIRONMENT: Github_actions
           DEBUG: "True"
         run: |
-          make test
+          make coverage
