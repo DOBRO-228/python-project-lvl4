@@ -1,4 +1,4 @@
-name: Coverage tests
+name: Tests coverage
 
 on:
   push:
@@ -32,4 +32,5 @@ jobs:
           ENVIRONMENT: Github_actions
           DEBUG: "True"
         run: |
+          make test
           make coverage
