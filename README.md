@@ -1,4 +1,4 @@
-# Per project "Task manager"
+# Pet project "Task manager"
 
 ## Hexlet tests and linter status
 
