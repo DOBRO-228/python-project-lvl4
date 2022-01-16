@@ -28,7 +28,7 @@
     <th>{% translate 'Name' %}</th>
     <th>{% translate 'Status' %}</th>
     <th>{% translate 'Author' %}</th>
-    <th>{% translate 'Performer' %}</th>
+    <th>{% translate 'Executor' %}</th>
     <th>{% translate 'Created at' %}</th>
     <th>{% translate 'Actions' %}</th>
   </tr>
@@ -40,7 +40,7 @@
     <td><a class="a-custom" href="{% url 'tasks:detail' pk=task.id %}">{{ task.name }}</a></td>
     <td>{{ task.status }}</td>
     <td>{{ task.author|default:"" }}</td>
-    <td>{{ task.performer|default:"" }}</td>
+    <td>{{ task.executor|default:"" }}</td>
     <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
     <td>
       <a class="btn btn-custom" href="{% url 'tasks:update' pk=task.id %}">{% translate 'Edit' %}</a>

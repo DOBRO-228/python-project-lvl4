@@ -170,7 +170,7 @@ msgstr "Автор"
 
 #: tasks/models.py:23 tasks/templates/tasks/detail.html:20
 #: tasks/templates/tasks/list.html:31
-msgid "Performer"
+msgid "Executor"
 msgstr "Исполнитель"
 
 #: tasks/models.py:29

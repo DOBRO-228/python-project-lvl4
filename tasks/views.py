@@ -34,7 +34,7 @@ class CreateTaskView(CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'tasks/create.html'
     success_url = reverse_lazy('tasks:list')
     success_message = _('Task created successfully')
-    fields = ['name', 'description', 'status', 'performer', 'labels']
+    fields = ['name', 'description', 'status', 'executor', 'labels']
 
     def form_valid(self, form):
         """Task's author is filled by User from request.
@@ -57,7 +57,7 @@ class UpdateTaskView(CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = 'tasks/update.html'
     success_url = reverse_lazy('tasks:list')
     success_message = _('Task changed successfully')
-    fields = ['name', 'description', 'status', 'performer', 'labels']
+    fields = ['name', 'description', 'status', 'executor', 'labels']
 
 
 class DeleteTaskView(CustomLoginRequiredMixin, AuthorIdentificationMixin, DeleteViewWithRestrictions):

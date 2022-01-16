@@ -202,7 +202,7 @@ class UsersTests(TestCase):
     def test_deletion_while_user_is_author(self):
         """Checking of deletion while task references on user."""
         self.second_task = Task.objects.get(pk=2)
-        self.second_task.performer = self.second_user
+        self.second_task.executor = self.second_user
         self.second_task.save()
         self.client.force_login(self.first_user)
         delete_url = reverse('users:delete', args=(self.first_user.id, ))
@@ -213,7 +213,7 @@ class UsersTests(TestCase):
         )
         self.assertContains(response, 'Невозможно удалить пользователя, потому что он используется')
 
-    def test_deletion_while_user_is_performer(self):
+    def test_deletion_while_user_is_executor(self):
         """Checking of deletion while task references on user."""
         self.first_task.author = self.second_user
         self.first_task.save()

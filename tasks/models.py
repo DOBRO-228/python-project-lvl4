@@ -14,13 +14,13 @@ class Task(models.Model):
     status = models.ForeignKey(
         Status, related_name='tasks', blank=False, null=True, on_delete=models.PROTECT, verbose_name=_('Status'),
     )
-    performer = models.ForeignKey(
+    executor = models.ForeignKey(
         User,
         related_name='assigned_tasks',
         blank=True,
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_('Performer'),
+        verbose_name=_('Executor'),
     )
     labels = models.ManyToManyField(Label, related_name='tasks', blank=True, verbose_name=_('Labels'))
     created_at = models.DateTimeField(auto_now_add=True)

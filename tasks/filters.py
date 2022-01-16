@@ -13,7 +13,7 @@ class TaskFilter(FilterSet):
 
     class Meta(object):  # Noqa: D106
         model = Task
-        fields = ['status', 'performer', 'labels', 'self_tasks']
+        fields = ['status', 'executor', 'labels', 'self_tasks']
 
     def self_tasks_filter(self, queryset, name, value):  # Noqa: WPS110
         """If filter is selected return queryset of tasks which are created by user.

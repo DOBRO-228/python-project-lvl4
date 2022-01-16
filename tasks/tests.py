@@ -24,7 +24,7 @@ class TasksTests(TestCase):
             'name': 'Salam',
             'description': '228',
             'status': self.status_in_progress.id,
-            'performer': self.first_user.id,
+            'executor': self.first_user.id,
             'labels': [self.label_bug.id],
         }
 
@@ -75,7 +75,7 @@ class TasksTests(TestCase):
         self.assertEqual(self.first_task.description, '228')
         self.assertEqual(self.first_task.author, self.first_user)
         self.assertEqual(self.first_task.status, self.status_in_progress)
-        self.assertEqual(self.first_task.performer, self.first_user)
+        self.assertEqual(self.first_task.executor, self.first_user)
 
     def test_task_updating_without_login(self):
         """Checking of permissions to update."""
@@ -90,7 +90,7 @@ class TasksTests(TestCase):
         self.assertEqual(self.first_task.description, 'Описание')
         self.assertEqual(self.first_task.author, self.first_user)
         self.assertEqual(self.first_task.status, self.status_completed)
-        self.assertEqual(self.first_task.performer, self.second_user)
+        self.assertEqual(self.first_task.executor, self.second_user)
 
     def test_task_deletion(self):
         """Checking of task deletion."""
@@ -136,7 +136,7 @@ class TasksTests(TestCase):
         self.assertContains(response, created_task)
         self.assertContains(response, self.new_task_data['name'])
         self.assertContains(response, self.new_task_data['description'])
-        self.assertContains(response, self.new_task_data['performer'])
+        self.assertContains(response, self.new_task_data['executor'])
         self.assertContains(response, self.second_user)
         self.assertContains(response, self.new_task_data['status'])
         self.assertContains(response, self.label_bug)
@@ -157,10 +157,10 @@ class TasksTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(list(response.context['tasks']), [self.second_task])
 
-    def test_filter_by_performer(self):
+    def test_filter_by_executor(self):
         """Checking of filtered list."""
         self.client.force_login(self.first_user)
-        filtered_list = '{0}?performer=2'.format(reverse('tasks:list'))
+        filtered_list = '{0}?executor=2'.format(reverse('tasks:list'))
         response = self.client.get(filtered_list)
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(list(response.context['tasks']), [self.first_task])
