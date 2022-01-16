@@ -6,7 +6,7 @@ test:
 	poetry run python3 manage.py test
 coverage:
 	poetry run coverage run --source='.' manage.py test
-	poetry run coverage report
+	poetry run coverage xml
 test-coverage_mine:
 	poetry run pytest --cov=users
 sort:
