@@ -79,7 +79,7 @@ msgstr "Действия"
 #: tasks/templates/tasks/update.html:8 users/templates/users/list.html:25
 #: users/templates/users/update.html:8
 msgid "Edit"
-msgstr "Редактировать"
+msgstr "Изменить"
 
 #: labels/templates/labels/list.html:27
 #: statuses/templates/statuses/list.html:27
@@ -90,7 +90,7 @@ msgstr "Удалить"
 
 #: labels/templates/labels/update.html:5
 msgid "Edit label"
-msgstr "Редактировать метку"
+msgstr "Изменение метки"
 
 #: labels/views.py:24
 msgid "Label created successfully"
@@ -133,7 +133,7 @@ msgstr "Удаление статуса"
 
 #: statuses/templates/statuses/update.html:5
 msgid "Edit status"
-msgstr "Редактировать статус"
+msgstr "Изменение статуса"
 
 #: statuses/views.py:24
 msgid "Status created successfully"
