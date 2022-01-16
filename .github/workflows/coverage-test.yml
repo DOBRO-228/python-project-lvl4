@@ -26,7 +26,6 @@ jobs:
           make install
 
       - name: Run coverage test
-        uses: paambaati/codeclimate-action@v3.0.0
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DATABASE_URL: sqlite:///task_manager.sqlite3
