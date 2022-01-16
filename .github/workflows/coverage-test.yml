@@ -25,16 +25,14 @@ jobs:
           poetry update
           make install
 
-      - name: Run coverage test
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DATABASE_URL: sqlite:///task_manager.sqlite3
           ENVIRONMENT: Github_actions
           DEBUG: "True"
-        run: |
-          make coverage
-      
-      - name: Publish code coverage report
-        uses: paambaati/codeclimate-action@v3.0.0
-        env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: make coverage
+          debug: true
