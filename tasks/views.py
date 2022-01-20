@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -9,7 +10,6 @@ from tasks.filters import TaskFilter
 from tasks.mixins import AuthorIdentificationMixin
 from tasks.models import Task
 from users.models import User
-from django.contrib.auth import get_user_model
 
 
 class TasksListView(CustomLoginRequiredMixin, FilterView):
