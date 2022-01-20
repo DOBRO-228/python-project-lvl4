@@ -1,8 +1,8 @@
 from django.contrib import auth
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from tasks.models import Task
+from users.models import User
 
 
 class UsersTests(TestCase):

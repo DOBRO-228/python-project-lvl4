@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
@@ -9,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from mixins import CustomLoginRequiredMixin, DeleteViewWithRestrictions
 from users.forms import UserRegistrationForm
 from users.mixins import UserIdentificationMixin
+from users.models import User
 
 
 class ListUserView(ListView):

@@ -8,6 +8,8 @@ from mixins import CustomLoginRequiredMixin, DeleteViewWithRestrictions
 from tasks.filters import TaskFilter
 from tasks.mixins import AuthorIdentificationMixin
 from tasks.models import Task
+from users.models import User
+from django.contrib.auth import get_user_model
 
 
 class TasksListView(CustomLoginRequiredMixin, FilterView):
@@ -46,7 +48,7 @@ class CreateTaskView(CustomLoginRequiredMixin, SuccessMessageMixin, CreateView):
             Inherited method.
 
         """
-        form.instance.author = self.request.user
+        form.instance.author = User.objects.get(pk=self.request.user.pk)
         return super().form_valid(form)
 
 
