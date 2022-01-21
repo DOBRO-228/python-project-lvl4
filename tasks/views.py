@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -62,7 +61,9 @@ class UpdateTaskView(CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
     fields = ['name', 'description', 'status', 'executor', 'labels']
 
 
-class DeleteTaskView(CustomLoginRequiredMixin, AuthorIdentificationMixin, DeleteViewWithRestrictions):
+class DeleteTaskView(
+    CustomLoginRequiredMixin, AuthorIdentificationMixin, DeleteViewWithRestrictions,
+):
     """Delete task view."""
 
     model = Task

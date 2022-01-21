@@ -28,7 +28,11 @@ class StatusesTests(TestCase):
         """Checking of list of statuses without login."""
         response = self.client.get(reverse('statuses:list'))
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
 
     def test_status_creating(self):
@@ -37,7 +41,11 @@ class StatusesTests(TestCase):
         status = {'name': 'In progress'}
         response = self.client.post(reverse('statuses:create'), status, follow=True)
         self.assertRedirects(
-            response, '/statuses/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/statuses/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Статус успешно создан')
         created_status = Status.objects.get(name=status['name'])
@@ -48,7 +56,11 @@ class StatusesTests(TestCase):
         status = {'name': 'In progress'}
         response = self.client.post(reverse('statuses:create'), status, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
 
     def test_status_updating(self):
@@ -58,7 +70,11 @@ class StatusesTests(TestCase):
         updated_status = {'name': 'In progress'}
         response = self.client.post(update_url, updated_status, follow=True)
         self.assertRedirects(
-            response, '/statuses/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/statuses/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Статус успешно изменён')
         self.assertEqual(Status.objects.get(pk=self.status_completed.id), self.status_completed)
@@ -69,7 +85,11 @@ class StatusesTests(TestCase):
         updated_status = {'name': 'In progress'}
         response = self.client.post(update_url, updated_status, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
         self.assertEqual(Status.objects.get(pk=self.status_completed.id), self.status_completed)
@@ -85,7 +105,11 @@ class StatusesTests(TestCase):
         with self.assertRaises(Status.DoesNotExist):
             Status.objects.get(pk=self.status_completed.id)
         self.assertRedirects(
-            response, '/statuses/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/statuses/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Статус успешно удалён')
 
@@ -95,7 +119,11 @@ class StatusesTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertEqual(Status.objects.get(pk=self.status_completed.id), self.status_completed)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
@@ -106,6 +134,10 @@ class StatusesTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(Status.objects.filter(pk=self.status_completed.id).exists())
         self.assertRedirects(
-            response, '/statuses/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/statuses/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Невозможно удалить статус, потому что он используется')

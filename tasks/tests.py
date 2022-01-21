@@ -40,7 +40,11 @@ class TasksTests(TestCase):
         """Checking list of tasks without login."""
         response = self.client.get(reverse('tasks:list'))
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
 
     def test_task_creating(self):
@@ -48,7 +52,11 @@ class TasksTests(TestCase):
         self.client.force_login(self.first_user)
         response = self.client.post(reverse('tasks:create'), self.new_task_data, follow=True)
         self.assertRedirects(
-            response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/tasks/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Задача успешно создана')
         created_task = Task.objects.get(name=self.new_task_data['name'])
@@ -58,7 +66,11 @@ class TasksTests(TestCase):
         """Checking of task creating without login."""
         response = self.client.post(reverse('statuses:create'), self.new_task_data, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
 
     def test_task_updating(self):
@@ -67,7 +79,11 @@ class TasksTests(TestCase):
         update_url = reverse('tasks:update', args=(self.first_task.id, ))
         response = self.client.post(update_url, self.new_task_data, follow=True)
         self.assertRedirects(
-            response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/tasks/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Задача успешно изменена')
         self.first_task.refresh_from_db()
@@ -82,7 +98,11 @@ class TasksTests(TestCase):
         update_url = reverse('tasks:update', args=(self.first_task.id, ))
         response = self.client.post(update_url, self.new_task_data, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
         self.first_task.refresh_from_db()
@@ -100,7 +120,11 @@ class TasksTests(TestCase):
         with self.assertRaises(Task.DoesNotExist):
             Task.objects.get(pk=self.first_task.id)
         self.assertRedirects(
-            response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/tasks/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Задача успешно удалена')
 
@@ -110,7 +134,11 @@ class TasksTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(Task.objects.filter(pk=self.first_task.id).exists())
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
@@ -121,7 +149,11 @@ class TasksTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(Task.objects.filter(pk=self.first_task.id).exists())
         self.assertRedirects(
-            response, '/tasks/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/tasks/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Задачу может удалить только её автор')
 

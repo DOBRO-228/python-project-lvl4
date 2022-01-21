@@ -26,7 +26,11 @@ class LabelsTests(TestCase):
         """Checking of list of labels without login."""
         response = self.client.get(reverse('labels:list'))
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
 
     def test_label_creating(self):
@@ -35,7 +39,11 @@ class LabelsTests(TestCase):
         label = {'name': 'Релиз'}
         response = self.client.post(reverse('labels:create'), label, follow=True)
         self.assertRedirects(
-            response, '/labels/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/labels/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Метка успешно создана')
         created_label = Label.objects.get(name=label['name'])
@@ -46,7 +54,11 @@ class LabelsTests(TestCase):
         label = {'name': 'Релиз'}
         response = self.client.post(reverse('labels:create'), label, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
 
     def test_label_updating(self):
@@ -56,7 +68,11 @@ class LabelsTests(TestCase):
         updated_label = {'name': 'Релиз'}
         response = self.client.post(update_url, updated_label, follow=True)
         self.assertRedirects(
-            response, '/labels/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/labels/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Метка успешно изменена')
         self.assertEqual(Label.objects.get(pk=self.label_bug.id).name, 'Релиз')
@@ -67,7 +83,11 @@ class LabelsTests(TestCase):
         updated_label = {'name': 'Релиз'}
         response = self.client.post(update_url, updated_label, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
         self.label_bug.refresh_from_db()
@@ -81,7 +101,11 @@ class LabelsTests(TestCase):
         with self.assertRaises(Label.DoesNotExist):
             Label.objects.get(pk=self.label_bug.id)
         self.assertRedirects(
-            response, '/labels/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/labels/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Метка успешно удалена')
 
@@ -91,7 +115,11 @@ class LabelsTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(Label.objects.filter(pk=self.label_bug.id).exists())
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
@@ -105,6 +133,10 @@ class LabelsTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(Label.objects.filter(pk=self.label_bug.id).exists())
         self.assertRedirects(
-            response, '/labels/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/labels/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Невозможно удалить метку, потому что она используется')

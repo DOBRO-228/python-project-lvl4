@@ -9,10 +9,20 @@ class Task(models.Model):
     name = models.CharField(max_length=150, blank=False, verbose_name=_('Name'))  # Noqa: WPS432
     description = models.TextField(blank=True, verbose_name=_('Description'))
     author = models.ForeignKey(
-        User, related_name='created_tasks', blank=False, null=False, on_delete=models.PROTECT, verbose_name=_('Author'),
+        User,
+        related_name='created_tasks',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+        verbose_name=_('Author'),
     )
     status = models.ForeignKey(
-        Status, related_name='tasks', blank=False, null=True, on_delete=models.PROTECT, verbose_name=_('Status'),
+        Status,
+        related_name='tasks',
+        blank=False,
+        null=True,
+        on_delete=models.PROTECT,
+        verbose_name=_('Status'),
     )
     executor = models.ForeignKey(
         User,
@@ -22,7 +32,9 @@ class Task(models.Model):
         on_delete=models.PROTECT,
         verbose_name=_('Executor'),
     )
-    labels = models.ManyToManyField(Label, related_name='tasks', blank=True, verbose_name=_('Labels'))
+    labels = models.ManyToManyField(
+        Label, related_name='tasks', blank=True, verbose_name=_('Labels'),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta(object):

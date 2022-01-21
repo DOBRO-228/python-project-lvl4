@@ -9,7 +9,9 @@ class TaskFilter(FilterSet):
     """FilterSet for tasks."""
 
     labels = ModelChoiceFilter(label=_('Label'), queryset=Label.objects.all())
-    self_tasks = BooleanFilter(label=_('Self tasks'), method='self_tasks_filter', widget=forms.CheckboxInput)
+    self_tasks = BooleanFilter(
+        label=_('Self tasks'), method='self_tasks_filter', widget=forms.CheckboxInput,
+    )
 
     class Meta(object):  # Noqa: D106
         model = Task

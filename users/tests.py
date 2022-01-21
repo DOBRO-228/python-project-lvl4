@@ -36,7 +36,11 @@ class UsersTests(TestCase):
         }
         response = self.client.post(url, user, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Пользователь успешно зарегистрирован')
         created_user = User.objects.get(username=user['username'])
@@ -90,7 +94,7 @@ class UsersTests(TestCase):
         self.assertEqual(response.status_code, 200)
         logged_user = auth.get_user(self.client)
         self.assertFalse(logged_user.is_authenticated)
-        msg = 'Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.'
+        msg = 'Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.'  # Noqa: E501
         self.assertContains(response, msg)
 
     def test_logout(self):
@@ -116,7 +120,11 @@ class UsersTests(TestCase):
         }
         response = self.client.post(update_url, updated_user, follow=True)
         self.assertRedirects(
-            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/users/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Пользователь успешно изменён')
         self.first_user.refresh_from_db()
@@ -138,7 +146,11 @@ class UsersTests(TestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         response = self.client.post(update_url, updated_user, follow=True)
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertEqual(User.objects.get(pk=self.first_user.id).username, 'FBK')
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
@@ -157,7 +169,11 @@ class UsersTests(TestCase):
         update_url = reverse('users:update', args=(self.second_user.id, ))
         response = self.client.post(update_url, updated_user, follow=True)
         self.assertRedirects(
-            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/users/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertEqual(User.objects.get(pk=self.first_user.id).username, 'FBK')
         self.assertContains(response, 'У вас нет прав для изменения другого пользователя')
@@ -172,7 +188,11 @@ class UsersTests(TestCase):
         with self.assertRaises(User.DoesNotExist):
             User.objects.get(pk=self.first_user.id)
         self.assertRedirects(
-            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/users/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Пользователь успешно удалён')
 
@@ -184,7 +204,11 @@ class UsersTests(TestCase):
         self.assertTrue(User.objects.filter(pk=self.second_user.id).exists())
         self.assertTrue(User.objects.filter(pk=self.first_user.id).exists())
         self.assertRedirects(
-            response, '/login/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/login/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
@@ -195,7 +219,11 @@ class UsersTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(User.objects.filter(pk=self.second_user.id).exists())
         self.assertRedirects(
-            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/users/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'У вас нет прав для изменения другого пользователя')
 
@@ -209,7 +237,11 @@ class UsersTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(User.objects.filter(pk=self.first_user.id).exists())
         self.assertRedirects(
-            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/users/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Невозможно удалить пользователя, потому что он используется')
 
@@ -222,6 +254,10 @@ class UsersTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertTrue(User.objects.filter(pk=self.first_user.id).exists())
         self.assertRedirects(
-            response, '/users/', status_code=302, target_status_code=200, fetch_redirect_response=True,
+            response,
+            '/users/',
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
         )
         self.assertContains(response, 'Невозможно удалить пользователя, потому что он используется')
